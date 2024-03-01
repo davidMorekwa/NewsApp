@@ -84,7 +84,7 @@ dependencies {
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
     // room
     implementation("androidx.room:room-runtime:2.6.1")
-    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation ("androidx.room:room-paging:2.6.1")
     // paging
@@ -95,6 +95,8 @@ dependencies {
     // navigation
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+    // preference datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // test
     testImplementation("junit:junit:4.13.2")

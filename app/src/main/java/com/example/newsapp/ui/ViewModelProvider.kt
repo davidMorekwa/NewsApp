@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.newsapp.NewsApplication
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
+import com.example.newsapp.ui.screens.profile.ProfileScreenViewModel
 import com.example.newsapp.ui.screens.search.SearchScreenViewModel
 import com.example.newsapp.ui.screens.webview.WebViewViewModel
 
@@ -23,6 +24,11 @@ object ViewModelProvider {
         initializer {
             SearchScreenViewModel(
                 remoteRepository = newsApplication().appContainer.remoteRepository
+            )
+        }
+        initializer {
+            ProfileScreenViewModel(
+                context = newsApplication().applicationContext
             )
         }
     }

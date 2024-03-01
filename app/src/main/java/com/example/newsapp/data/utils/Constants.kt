@@ -1,6 +1,7 @@
 package com.example.newsapp.data.utils
 
 import androidx.compose.ui.graphics.Color
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.example.newsapp.BuildConfig.API_KEY
 import com.example.newsapp.data.model.NewsCategoryItem
 
@@ -30,5 +31,5 @@ object Constants {
     const val TABLE_NEWS_ARTICLES = "tbl_news_articles"
     const val TABLE_MULTIMEDIA = "tbl_multimedia"
     const val TABLE_ARTICLE_AND_MEDIA = "tbl_article_and_media"
-
+    val STORED_THEME = booleanPreferencesKey("isDarkTheme")
 }

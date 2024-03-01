@@ -1,8 +1,6 @@
 package com.example.newsapp.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,7 +93,7 @@ fun BottomAppBar(
             IconButton(
                 onClick = {
                     onIconClick(0)
-                    navHostController.navigate(NavigationScreens.HOME.name)
+                    navHostController.navigate(NavigationScreens.HOME_SCREEN.name)
                 }
             ) {
                 Icon(
@@ -110,7 +107,7 @@ fun BottomAppBar(
             IconButton(
                 onClick = {
                     onIconClick(1)
-                    navHostController.navigate(NavigationScreens.SEARCH.name)
+                    navHostController.navigate(NavigationScreens.SEARCH_SCREEN.name)
                 }
             ) {
                 Icon(
@@ -128,7 +125,12 @@ fun BottomAppBar(
                         .size(25.dp)
                 )
             }
-            IconButton(onClick = { onIconClick(3) }) {
+            IconButton(
+                onClick = {
+                    onIconClick(3)
+                    navHostController.navigate(NavigationScreens.PROFILE_SCREEN.name)
+                }
+            ) {
                 Icon(
                     imageVector = userIcon,
                     contentDescription = "User Icon",
