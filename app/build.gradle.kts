@@ -97,6 +97,13 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
     // preference datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    // material
+    implementation ("androidx.compose.material:material:1.6.2")
+    // glance
+    implementation ("androidx.glance:glance-appwidget:1.0.0")
+    implementation ("androidx.glance:glance-material:1.0.0")
+    implementation ("androidx.glance:glance-material3:1.0.0")
+
 
     // test
     testImplementation("junit:junit:4.13.2")

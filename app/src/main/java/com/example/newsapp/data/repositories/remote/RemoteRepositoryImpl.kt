@@ -121,7 +121,7 @@ class RemoteRepositoryImpl(
     }
 
     override suspend fun searchArticle(query: String): List<Doc> {
-        var response = newsApiService.searchArticle()
+        var response = newsApiService.searchArticle(query = query)
         Log.d(TAG, "Response code: ${response.code()}")
         var body = response.body() ?: return emptyList()
         return body.response.docs

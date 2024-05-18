@@ -2,6 +2,7 @@ package com.example.newsapp.ui.screens.webview
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
@@ -26,11 +27,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.newsapp.ui.navigation.NavigationScreens
+import com.example.newsapp.ui.screens.webview.WebView.WebViewImpl
+import com.example.newsapp.ui.screens.webview.WebView.WebViewInterface
 import com.example.newsapp.ui.theme.NewsAppTheme
 
 const val TAG = "WEBVIEW SCREEEN"
@@ -44,7 +48,6 @@ fun WebViewScreen(
     val state = webViewViewModel.uistate.collectAsState()
     val url = state.value.url
     Log.d(TAG, "URL: ${state.value.url}")
-
     var webViewClient = remember {
         WebViewClient()
     }
@@ -86,15 +89,17 @@ fun WebViewScreen(
                         WebView(context).apply {
                             settings.javaScriptEnabled = true
                             webViewClient = webViewClient
-
+                            addJavascriptInterface(WebViewImpl(context), "Android")
                             settings.loadWithOverviewMode = true
                             settings.useWideViewPort = true
                             settings.setSupportZoom(true)
+                            webChromeClient = WebChromeClient()
+                            loadUrl(url)
                         }
                     },
-                    update = { webView ->
-                        webView.loadUrl(url)
-                    }
+//                    update = { webView ->
+//                        webView.loadUrl(url)
+//                    }
 
                 )
                 BackHandler {
@@ -107,12 +112,6 @@ fun WebViewScreen(
             }
         }
     }
-//    val url = "https://www.nytimes.com/2024/02/21/us/politics/cybersecurity-ports.html"
-
-//    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(state.value.url))
-//    LocalContext.current.startActivity(intent)
-
-
 }
 fun WebViewClient.shouldOverrideUrlLoading(url: String): Boolean {
     // Implement custom logic to decide whether to override URL loading

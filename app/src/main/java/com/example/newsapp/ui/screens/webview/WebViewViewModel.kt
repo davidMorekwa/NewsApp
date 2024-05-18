@@ -19,7 +19,8 @@ class WebViewViewModel: ViewModel() {
         Log.d(TAG, "url: ${_uiState.value.url}")
     }
 
-    fun readArticle(article: NewsArticle) {
-        _uiState.value = WebViewUiState(url = article.htmlurl)
+    fun readArticle(articleUrl: String) {
+        Log.d(TAG, "Article URL: ${articleUrl}")
+        _uiState.value = WebViewUiState(url = articleUrl)
     }
 }

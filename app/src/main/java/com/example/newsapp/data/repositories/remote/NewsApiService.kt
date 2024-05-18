@@ -89,9 +89,9 @@ interface NewsApiService {
         @Query("api-key") key: String = Constants.key
     ): Response<ApiResponse>
 
-    @GET("articlesearch.json")
+    @GET("https://api.nytimes.com/svc/search/v2/articlesearch.json")
     suspend fun searchArticle(
         @Query("api-key") key: String = Constants.key,
-        @Query("q") query: String = "Russia",
+        @Query("q") query: String,
     ): Response<SearchResponse>
 }

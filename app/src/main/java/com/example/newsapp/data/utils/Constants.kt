@@ -31,5 +31,6 @@ object Constants {
     const val TABLE_NEWS_ARTICLES = "tbl_news_articles"
     const val TABLE_MULTIMEDIA = "tbl_multimedia"
     const val TABLE_ARTICLE_AND_MEDIA = "tbl_article_and_media"
+    const val TABLE_RECENT_SEARCH = "tbl_recent_search"
     val STORED_THEME = booleanPreferencesKey("isDarkTheme")
 }

@@ -23,7 +23,8 @@ object ViewModelProvider {
         }
         initializer {
             SearchScreenViewModel(
-                remoteRepository = newsApplication().appContainer.remoteRepository
+                remoteRepository = newsApplication().appContainer.remoteRepository,
+                localRepository = newsApplication().appContainer.localRepository
             )
         }
         initializer {

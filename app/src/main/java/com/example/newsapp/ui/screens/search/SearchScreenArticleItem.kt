@@ -1,4 +1,4 @@
-package com.example.newsapp.ui.components
+package com.example.newsapp.ui.screens.search
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,7 +34,7 @@ fun SearchScreenArticleItem(
     article: NewsArticle,
     onArticleClick: ()->Unit
 ) {
-    val model = article.multimedia?.get(1)?.url
+    val model = article.multimedia?.get(0)?.url
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(12.dp),
@@ -48,7 +48,7 @@ fun SearchScreenArticleItem(
     ) {
         Column {
             SubcomposeAsyncImage(
-                model = model,
+                model = "https://static01.nyt.com/${model}",
                 contentDescription = "Article Multimedia",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

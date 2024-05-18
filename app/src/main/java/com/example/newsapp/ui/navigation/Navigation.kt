@@ -61,7 +61,11 @@ fun Navigation(
             )
         }
         composable(route = NavigationScreens.SEARCH_SCREEN.name){
-            SearchScreen(searchScreenViewModel = searchScreenViewModel)
+            SearchScreen(
+                searchScreenViewModel = searchScreenViewModel,
+                webViewViewModel = webViewViewModel,
+                navHostController = navController
+            )
         }
         composable(route = NavigationScreens.PROFILE_SCREEN.name){
             ProfileScreen(

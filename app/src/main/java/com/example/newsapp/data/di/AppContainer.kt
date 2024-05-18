@@ -30,6 +30,7 @@ interface AppContainer {
 class AppContainerImpl(context: Context): AppContainer{
     val database: NewsDatabase = NewsDatabase.getDatabaseInstance(context)
     val newsDao = database.newsDao()
+    val recentSearchDao = database.recentSearchDao()
     val multimediaDao = database.multimediaDao()
     val moshi: Moshi = Moshi.Builder()
         .addLast(KotlinJsonAdapterFactory())
@@ -45,7 +46,10 @@ class AppContainerImpl(context: Context): AppContainer{
         RemoteRepositoryImpl(newsApiService = newsApiService, newsDatabase = database)
     }
     override val localRepository: LocalRepository by lazy{
-        LocalRepositoryImpl(newsDao = newsDao)
+        LocalRepositoryImpl(
+            newsDao = newsDao,
+            recentSearchDao = recentSearchDao
+        )
     }
 //    @OptIn(ExperimentalPagingApi::class)
 //    override val pager: Pager<Int, NewsArticleEntity>  =

@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,7 +84,7 @@ fun BottomAppBar(
         modifier = Modifier
             .graphicsLayer { translationY = position }
             .height(35.dp),
-        tonalElevation = 16.dp,
+        color = Color.Black
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -99,6 +100,7 @@ fun BottomAppBar(
                 Icon(
                     imageVector = homeIcon,
                     contentDescription = "Home icon",
+                    tint = Color.White,
                     modifier = Modifier
                         .size(25.dp)
                 )
@@ -113,6 +115,7 @@ fun BottomAppBar(
                 Icon(
                     imageVector = searchIcon,
                     contentDescription = "Search icon",
+                    tint = Color.White,
                     modifier = Modifier
                         .size(25.dp)
                 )
@@ -121,6 +124,7 @@ fun BottomAppBar(
                 Icon(
                     painter = painterResource(id = bookmarkIcon),
                     contentDescription = "Bookmarks",
+                    tint = Color.White,
                     modifier = Modifier
                         .size(25.dp)
                 )
@@ -134,6 +138,7 @@ fun BottomAppBar(
                 Icon(
                     imageVector = userIcon,
                     contentDescription = "User Icon",
+                    tint = Color.White,
                     modifier = Modifier
                         .size(25.dp)
                 )
