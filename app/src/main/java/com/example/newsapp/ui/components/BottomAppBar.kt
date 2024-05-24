@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.R
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.theme.NewsAppTheme
@@ -120,15 +121,15 @@ fun BottomAppBar(
                         .size(25.dp)
                 )
             }
-            IconButton(onClick = { onIconClick(2) }) {
-                Icon(
-                    painter = painterResource(id = bookmarkIcon),
-                    contentDescription = "Bookmarks",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(25.dp)
-                )
-            }
+//            IconButton(onClick = { onIconClick(2) }) {
+//                Icon(
+//                    painter = painterResource(id = bookmarkIcon),
+//                    contentDescription = "Bookmarks",
+//                    tint = Color.White,
+//                    modifier = Modifier
+//                        .size(25.dp)
+//                )
+//            }
             IconButton(
                 onClick = {
                     onIconClick(3)
@@ -151,6 +152,11 @@ fun BottomAppBar(
 @Composable
 fun BottomAppBarPreview() {
     NewsAppTheme {
-//        BottomAppBar()
+        BottomAppBar(
+            position = 1f,
+            onIconClick = {},
+            navHostController = rememberNavController(),
+            selectedIcon = 1
+        )
     }
 }

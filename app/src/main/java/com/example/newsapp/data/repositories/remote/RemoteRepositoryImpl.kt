@@ -21,31 +21,6 @@ class RemoteRepositoryImpl(
             return emptyList()
         }
         Log.d(TAG, "Response: ${body.results.size}")
-        newsDatabase.withTransaction {
-            newsDatabase.newsDao().clearArticles()
-            var index = 1
-            val newsArticleEntityList = body.results.map { article: NewsArticle ->
-                newsDatabase.newsDao().insertArticles(article.toNewsArticleEntity())
-                val media = article.multimedia
-                media?.let { mediaList ->
-                    val mediaEntityList = mediaList.map { it ->
-                        it.toMultimediaEntity(index)
-                    }
-                    newsDatabase.multimediaDao().insertMultimedia(mediaEntityList)
-                }
-                index++
-            }
-//            val multimediaList = body.results.map { article: NewsArticle ->
-//                article.multimedia?.get(0)?.toMultimediaEntity()!!
-//            }
-//            newsDatabase.multimediaDao().insertMultimedia(multimediaList)
-//            Log.d(TAG, "Inserting articles into room db")
-//            newsArticleEntityList.forEach { it ->
-//
-//
-//            }
-//            newsDatabase.newsDao().insertArticles(newsArticleEntityList)
-        }
         return body.results
     }
 
@@ -113,10 +88,7 @@ class RemoteRepositoryImpl(
                 newsApiService.getTopStories()
             }
         }
-        val articles = response.body()
-        if (articles == null) {
-            return emptyList()
-        }
+        val articles = response.body() ?: return emptyList()
         return articles.results
     }
 

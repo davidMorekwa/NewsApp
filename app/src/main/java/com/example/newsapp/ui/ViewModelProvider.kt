@@ -16,6 +16,7 @@ object ViewModelProvider {
         initializer {
             HomeScreenViewModel(
                 remoteRepository = newsApplication().appContainer.remoteRepository,
+                localRepository = newsApplication().appContainer.localRepository
             )
         }
         initializer {

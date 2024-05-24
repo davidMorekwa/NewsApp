@@ -4,6 +4,7 @@ package com.example.newsapp.data.model
 import com.example.newsapp.data.repositories.local.entities.NewsArticleEntity
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class NewsArticle(
@@ -29,8 +30,9 @@ data class NewsArticle(
     var htmlurl: String
 ){
     fun toNewsArticleEntity():NewsArticleEntity{
+        val myUUID = UUID.randomUUID()
         return NewsArticleEntity(
-            id = null,
+            id = myUUID,
             articleabstract = articleabstract,
             byline = byline,
             itemType = itemType,

@@ -116,7 +116,9 @@ fun HomeScreen(
                 .padding(top = paddingTop)
         ) {
             if(newsArticles.value.isEmpty()){
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    color = Color.Black
+                )
             }else {
                 NewsArticleList(
                     scrollState = scrollState,
@@ -124,7 +126,6 @@ fun HomeScreen(
                     webViewViewModel = webViewViewModel,
                     navHostController = navHostController,
                     homeScreenViewModel = homeScreenViewModel,
-
                 )
             }
         }
@@ -158,6 +159,12 @@ fun NewsArticleList(
                     onArticleClick = {
                         webViewViewModel.readArticle(articleUrl = article.htmlurl)
                         navHostController.navigate(NavigationScreens.ARTICLE_VIEW_SCREEN.name)
+                    },
+                    onAddToFavoriteClick = {
+                        homeScreenViewModel.addToFavorites(article = article)
+                    },
+                    onAddToBookmarkClick = {
+                        homeScreenViewModel.addToBookmarks(article = article)
                     }
                 )
             }

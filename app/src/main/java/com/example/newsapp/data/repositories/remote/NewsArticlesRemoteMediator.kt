@@ -27,33 +27,33 @@ class NewsArticlesRemoteMediator (
         state: PagingState<Int, NewsArticleEntity>
     ): MediatorResult {
         return try {
-            val loadKey = when (loadType) {
-                LoadType.REFRESH -> 1
-                LoadType.PREPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                    if (lastItem == null) {
-                        1
-                    } else {
-                        (lastItem.id?.div(state.config.pageSize))?.plus(1)
-                    }
-                }
-
-                LoadType.APPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-            }
+//            val loadKey = when (loadType) {
+//                LoadType.REFRESH -> 1
+//                LoadType.PREPEND -> {
+//                    val lastItem = state.lastItemOrNull()
+//                    if (lastItem == null) {
+//                        1
+//                    } else {
+//                        (lastItem.id?.div(state.config.pageSize))?.plus(1)
+//                    }
+//                }
+//
+//                LoadType.APPEND -> return MediatorResult.Success(endOfPaginationReached = true)
+//            }
             Log.d(TAG, "LoadType: ${loadType}")
             val articles = remoteRepository.getTopStories()
             Log.d(TAG, "Articles retrieved: ${articles?.size}")
-            newsDatabase.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    Log.d(TAG, "Clearing database")
-                    localRepository.clearArticles()
-                }
-                Log.d(TAG, "Inserting articles into local database")
-                val newsArticleEntityList = articles.map { article: NewsArticle ->
-                    article.toNewsArticleEntity()
-                }
-                localRepository.insertArticles(newsArticleEntityList)
-            }
+//            newsDatabase.withTransaction {
+//                if (loadType == LoadType.REFRESH) {
+//                    Log.d(TAG, "Clearing database")
+//                    localRepository.clearArticles()
+//                }
+//                Log.d(TAG, "Inserting articles into local database")
+//                val newsArticleEntityList = articles.map { article: NewsArticle ->
+//                    article.toNewsArticleEntity()
+//                }
+//                localRepository.insertArticles(newsArticleEntityList)
+//            }
             MediatorResult.Success(endOfPaginationReached = articles.isEmpty() ?: true)
         } catch (e: IOException){
             MediatorResult.Error(e)
