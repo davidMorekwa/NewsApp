@@ -1,44 +1,68 @@
 package com.example.newsapp.data.repositories.local
 
-import androidx.paging.PagingSource
+import androidx.room.withTransaction
+import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.repositories.local.dao.NewsDao
 import com.example.newsapp.data.repositories.local.dao.RecentSearchDao
-import com.example.newsapp.data.repositories.local.entities.ArticleAndMedia
+import com.example.newsapp.data.repositories.local.entities.ArticleWithMedia
 import com.example.newsapp.data.repositories.local.entities.NewsArticleEntity
 import com.example.newsapp.data.repositories.local.entities.RecentSearchEntity
 import kotlinx.coroutines.flow.Flow
 
 class LocalRepositoryImpl(
-    private val newsDao: NewsDao,
-    private val recentSearchDao: RecentSearchDao
+    private val newsDatabase: NewsDatabase
 ): LocalRepository {
-    override suspend fun insertArticles(articles: List<NewsArticleEntity>) {
-        articles.forEach { it->
-            newsDao.insertArticles(it)
+    override suspend fun getBookmarkArticles(): List<ArticleWithMedia> {
+        return newsDatabase.newsDao().getBookmarkArticles()
+    }
+
+    override suspend fun getFavoriteArticles(): List<ArticleWithMedia> {
+        return newsDatabase.newsDao().getFavoriteArticles()
+    }
+
+    override suspend fun addToBookmark(article: NewsArticle) {
+        val multimedia = article.multimedia
+        newsDatabase.withTransaction {
+            val articleEntity = article.toNewsArticleEntity()
+            articleEntity.isBookmark = true
+            val multimediaEntityList = multimedia?.map { it ->
+                it.toMultimediaEntity(articleEntity.id)
+            }
+            if (multimediaEntityList != null) {
+                newsDatabase.multimediaDao().insertMultimedia(multimediaEntityList)
+            }
+            newsDatabase.newsDao().addToBookmarks(article = articleEntity)
         }
     }
 
-    override suspend fun clearArticles() {
-        newsDao.clearArticles()
-    }
-
-    override fun getNewsArticles(): List<ArticleAndMedia> {
-        return newsDao.getNewsArticles()
+    override suspend fun addToFavorites(article: NewsArticle) {
+        val multimedia = article.multimedia
+        newsDatabase.withTransaction {
+            val articleEntity = article.toNewsArticleEntity()
+            articleEntity.isFavorite = true
+            val multimediaEntityList = multimedia?.map { it ->
+                it.toMultimediaEntity(articleEntity.id)
+            }
+            if (multimediaEntityList != null) {
+                newsDatabase.multimediaDao().insertMultimedia(multimediaEntityList)
+            }
+            newsDatabase.newsDao().addToFavorite(article = articleEntity)
+        }
     }
 
     override suspend fun insertRecentSearch(string: String) {
-        return recentSearchDao.insert(RecentSearchEntity(string))
+        return newsDatabase.recentSearchDao().insert(RecentSearchEntity(string))
     }
 
     override suspend fun getRecentSearch(): Flow<List<RecentSearchEntity>> {
-        return recentSearchDao.getRecentSearch()
+        return newsDatabase.recentSearchDao().getRecentSearch()
     }
 
     override suspend fun clearRecentSearch() {
-        return recentSearchDao.clearRecentSearch()
+        return newsDatabase.recentSearchDao().clearRecentSearch()
     }
 
     override suspend fun deleteSearchTerm(string: String) {
-        return recentSearchDao.deleteSearchTerm(string)
+        return newsDatabase.recentSearchDao().deleteSearchTerm(string)
     }
 }

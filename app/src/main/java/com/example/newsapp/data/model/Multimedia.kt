@@ -3,6 +3,7 @@ package com.example.newsapp.data.model
 import com.example.newsapp.data.repositories.local.entities.MultimediaEntity
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class Multimedia(
@@ -23,11 +24,11 @@ data class Multimedia(
     @Json(name = "width")
     var width: Int?
 ){
-    fun toMultimediaEntity(articleid: Int): MultimediaEntity{
+    fun toMultimediaEntity(articleid: UUID): MultimediaEntity{
         return MultimediaEntity(
             id = null,
             caption = caption,
-            articleId = null,
+            articleId = articleid,
             copyright = copyright,
             format = format,
             height = height,

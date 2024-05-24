@@ -5,13 +5,14 @@ import androidx.room.PrimaryKey
 import androidx.room.util.TableInfo
 import com.example.newsapp.data.model.Multimedia
 import com.example.newsapp.data.utils.Constants
+import java.util.UUID
 
 @Entity(
     tableName = Constants.TABLE_NEWS_ARTICLES,
 )
 data class NewsArticleEntity(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int?,
+    @PrimaryKey(autoGenerate = false)
+    var id: UUID,
     var articleabstract: String,
     var byline: String,
     var itemType: String,
@@ -20,5 +21,7 @@ data class NewsArticleEntity(
     var subsection: String,
     var title: String,
     var nyturi: String,
-    var htmlurl: String
+    var htmlurl: String,
+    var isFavorite: Boolean = false,
+    var isBookmark: Boolean = false
 )

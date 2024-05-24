@@ -1,17 +1,10 @@
 package com.example.newsapp.data.di
 
 import android.content.Context
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.RemoteMediator
 import com.example.newsapp.data.repositories.local.LocalRepository
 import com.example.newsapp.data.repositories.local.LocalRepositoryImpl
 import com.example.newsapp.data.repositories.local.NewsDatabase
-import com.example.newsapp.data.repositories.local.entities.ArticleAndMedia
-import com.example.newsapp.data.repositories.local.entities.NewsArticleEntity
 import com.example.newsapp.data.repositories.remote.NewsApiService
-import com.example.newsapp.data.repositories.remote.NewsArticlesRemoteMediator
 import com.example.newsapp.data.repositories.remote.RemoteRepository
 import com.example.newsapp.data.repositories.remote.RemoteRepositoryImpl
 import com.example.newsapp.data.utils.Constants
@@ -47,8 +40,7 @@ class AppContainerImpl(context: Context): AppContainer{
     }
     override val localRepository: LocalRepository by lazy{
         LocalRepositoryImpl(
-            newsDao = newsDao,
-            recentSearchDao = recentSearchDao
+            newsDatabase = database
         )
     }
 //    @OptIn(ExperimentalPagingApi::class)
