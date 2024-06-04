@@ -52,14 +52,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val theme: Flow<Boolean> = applicationContext.dataStore.data.map { value: Preferences ->
-            value[STORED_THEME] ?: false
-        }
+//        val theme: Flow<Boolean> = applicationContext.dataStore.data.map { value: Preferences ->
+//            value[STORED_THEME] ?: false
+//        }
 
         setContent {
-            val isDarkTheme = theme.collectAsState(initial = false)
-            Log.i(TAG, "Theme retrieved ${isDarkTheme.value}")
-            NewsAppTheme(useDarkTheme = isDarkTheme.value) {
+//            val isDarkTheme = theme.collectAsState(initial = false)
+//            Log.i(TAG, "Theme retrieved ${isDarkTheme.value}")
+            NewsAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

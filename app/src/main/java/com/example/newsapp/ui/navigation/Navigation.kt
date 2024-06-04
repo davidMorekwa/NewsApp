@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import com.example.newsapp.ui.ViewModelProvider
 import com.example.newsapp.ui.screens.home.HomeScreen
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
+import com.example.newsapp.ui.screens.headlines.HeadlinesScreen
 import com.example.newsapp.ui.screens.profile.ProfileScreen
 import com.example.newsapp.ui.screens.profile.ProfileScreenViewModel
 import com.example.newsapp.ui.screens.search.SearchScreen
@@ -21,6 +22,7 @@ import com.example.newsapp.ui.screens.webview.WebViewViewModel
 
 enum class NavigationScreens{
     HOME_SCREEN,
+    HEADLINE_ARTICLES_SCREEN,
     ARTICLE_VIEW_SCREEN,
     SEARCH_SCREEN,
     PROFILE_SCREEN
@@ -70,6 +72,13 @@ fun Navigation(
         composable(route = NavigationScreens.PROFILE_SCREEN.name){
             ProfileScreen(
                 profileScreenViewModel = profileScreenViewModel
+            )
+        }
+        composable(route = NavigationScreens.HEADLINE_ARTICLES_SCREEN.name){
+            HeadlinesScreen(
+                homeScreenViewModel = homeScreenViewModel,
+                webViewViewModel = webViewViewModel,
+                navHostController = navController
             )
         }
     }

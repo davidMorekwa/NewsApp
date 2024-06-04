@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(
@@ -17,8 +18,12 @@ class HomeScreenViewModel(
     private val localRepository: LocalRepository
 //    private val pager: Pager<Int, NewsArticleEntity>
 ): ViewModel() {
-    private var _uiState: MutableStateFlow<List<NewsArticle>> = MutableStateFlow(emptyList())
-    val state = _uiState.asStateFlow()
+    private var _topHeadlineUiState: MutableStateFlow<List<NewsArticle>> = MutableStateFlow(emptyList())
+    private var _latestNewsUiState: MutableStateFlow<List<NewsArticle>> = MutableStateFlow(emptyList())
+    private val isRefreshing =  MutableStateFlow(false)
+    val topHeadlinesState = _topHeadlineUiState.asStateFlow()
+    val latestNewsState = _latestNewsUiState.asStateFlow()
+    val isRefereshing = isRefreshing.asStateFlow()
     val TAG = "HOMESCREEN VIEW MODEL"
 
     private var lastScrollIndex = 0
@@ -37,14 +42,31 @@ class HomeScreenViewModel(
     init{
         viewModelScope.launch(Dispatchers.IO) {
             Log.d(TAG, "Getting articles")
-            _uiState.value = remoteRepository.getTopStories()
+            _topHeadlineUiState.value = remoteRepository.getTopStories()
+            _latestNewsUiState.value = remoteRepository.getLatestNews()
+            Log.d(TAG, "Latest Articles: ${_latestNewsUiState.value.size}")
+        }
+    }
+
+    fun refresh(){
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d(TAG, "Refresh For new Articles")
+            isRefreshing.value = true
+            val articles = remoteRepository.getLatestNews()
+            val currentArticles = _latestNewsUiState.value
+            val newArticles = articles.filter { newArticle ->
+                newArticle !in currentArticles
+            }
+            Log.d(TAG, "FRESH ARTICLES: ${newArticles.size}")
+            _latestNewsUiState.value = newArticles + currentArticles
+            isRefreshing.value = false
         }
     }
 
     fun getCategoryTopStories(category: String){
         viewModelScope.launch(Dispatchers.IO) {
             val results = remoteRepository.getCategoryTopStories(category)
-            _uiState.value = results
+            _topHeadlineUiState.value = results
         }
     }
     fun addToFavorites(article: NewsArticle){

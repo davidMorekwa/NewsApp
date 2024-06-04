@@ -2,9 +2,9 @@ package com.example.newsapp.data.repository.remote
 
 import android.util.Log
 import com.example.newsapp.data.fakeDataSource.RemoteDataSource
-import com.example.newsapp.data.model.Doc
+import com.example.newsapp.data.model.response.search.Doc
 import com.example.newsapp.data.model.NewsArticle
-import com.example.newsapp.data.model.response.ApiResponse
+import com.example.newsapp.data.model.response.topheadlines.ApiResponse
 import com.example.newsapp.data.repositories.remote.RemoteRepository
 import retrofit2.Response
 

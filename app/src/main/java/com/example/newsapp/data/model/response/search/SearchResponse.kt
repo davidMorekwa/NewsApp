@@ -1,7 +1,6 @@
-package com.example.newsapp.data.model.response
+package com.example.newsapp.data.model.response.search
 
 
-import com.example.newsapp.data.model.Response
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

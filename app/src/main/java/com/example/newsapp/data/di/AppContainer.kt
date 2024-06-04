@@ -4,9 +4,10 @@ import android.content.Context
 import com.example.newsapp.data.repositories.local.LocalRepository
 import com.example.newsapp.data.repositories.local.LocalRepositoryImpl
 import com.example.newsapp.data.repositories.local.NewsDatabase
-import com.example.newsapp.data.repositories.remote.NewsApiService
+import com.example.newsapp.data.repositories.remote.services.TopHeadlineNewsService
 import com.example.newsapp.data.repositories.remote.RemoteRepository
 import com.example.newsapp.data.repositories.remote.RemoteRepositoryImpl
+import com.example.newsapp.data.repositories.remote.services.LatestNewsService
 import com.example.newsapp.data.utils.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -14,7 +15,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 interface AppContainer {
-    val newsApiService: NewsApiService
+    val topHeadlineNewsService: TopHeadlineNewsService
+    val latestNewsService: LatestNewsService
     val remoteRepository: RemoteRepository
     val localRepository: LocalRepository
 //    val pager: Pager<Int, NewsArticleEntity>
@@ -28,15 +30,32 @@ class AppContainerImpl(context: Context): AppContainer{
     val moshi: Moshi = Moshi.Builder()
         .addLast(KotlinJsonAdapterFactory())
         .build()
-    val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
+
+    // Retrofit Builders
+
+    private val top_headlines_retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl(Constants.TOP_HEADLINES_BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
-    override val newsApiService: NewsApiService by lazy {
-        retrofit.create(NewsApiService::class.java)
+    private val latest_news_retrofit: Retrofit = Retrofit
+        .Builder()
+        .baseUrl(Constants.LATEST_NEWS_BASE_URL)
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .build()
+
+
+    override val topHeadlineNewsService: TopHeadlineNewsService by lazy {
+        top_headlines_retrofit.create(TopHeadlineNewsService::class.java)
+    }
+    override val latestNewsService: LatestNewsService by lazy {
+        latest_news_retrofit.create(LatestNewsService::class.java)
     }
     override val remoteRepository: RemoteRepository by lazy {
-        RemoteRepositoryImpl(newsApiService = newsApiService, newsDatabase = database)
+        RemoteRepositoryImpl(
+            topHeadlineNewsService = topHeadlineNewsService,
+            latestNewsService = latestNewsService,
+            newsDatabase = database
+        )
     }
     override val localRepository: LocalRepository by lazy{
         LocalRepositoryImpl(
