@@ -1,6 +1,8 @@
 package com.example.newsapp.ui.components
 
+import android.util.Log
 import android.widget.Toast
+import java.time.OffsetDateTime
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -39,6 +41,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
@@ -52,7 +55,10 @@ import coil.compose.SubcomposeAsyncImageContent
 import com.example.newsapp.R
 import com.example.newsapp.data.model.Multimedia
 import com.example.newsapp.data.model.NewsArticle
+import com.example.newsapp.data.utils.Constants.sampleArticle
 import com.example.newsapp.ui.theme.NewsAppTheme
+import java.time.Duration
+import java.time.ZoneOffset
 
 @Composable
 fun NewsArticleItem(
@@ -65,18 +71,19 @@ fun NewsArticleItem(
     var itemClicked by remember {
         mutableStateOf(false)
     }
-    val model = article.multimedia?.get(0)?.url
+    val currentTime = OffsetDateTime.now(ZoneOffset.UTC)
+    val published = OffsetDateTime.parse(article.publishedDate)
+    val timeDifference = Duration.between(published,currentTime)
+    val duration = when {
+        timeDifference.toHours() == 0L -> "${timeDifference.toMinutes()} min"
+        else -> "${timeDifference.toHours()} hr${if (timeDifference.toHours() > 1) "s" else ""}"
+    }
+    Log.d("NEws Article Item", "Duration:: ${duration}")
+    val multimedia = article.multimedia
+
     var dropDownMenuExpanded by remember {
         mutableStateOf(false)
     }
-    var isBookmarkClick by remember {
-        mutableStateOf(false)
-    }
-    var isFavoriteClick by remember {
-        mutableStateOf(false)
-    }
-    val bookmarkIcon = if(!isBookmarkClick) R.drawable.icons8_outlined_bookmark_50___ else R.drawable.icons8_bookmark_50___
-    val favoriteIcon = if(!isFavoriteClick) Icons.Outlined.FavoriteBorder else Icons.Filled.Favorite
     var buttonSize by remember { mutableStateOf(androidx.compose.ui.geometry.Size.Zero) }
     Surface(
         color = MaterialTheme.colorScheme.surface,
@@ -88,133 +95,60 @@ fun NewsArticleItem(
                 onArticleClick()
             }
     ) {
-        Column {
-            SubcomposeAsyncImage(
-                model = model,
-                contentDescription = "Article Multimedia",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .height(200.dp)
-            ) {
-                val state = painter.state
-                if(state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error){
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        CircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.outline,
-                            strokeWidth = 1.dp,
-                            strokeCap = StrokeCap.Round,
-                        )
-                    }
-
-                } else{
-                    SubcomposeAsyncImageContent()
+        if (multimedia.isNullOrEmpty()){
+            Column {
+                ArticleContent(
+                    article = article,
+                    duration = duration,
+                    dropDownMenuExpanded = dropDownMenuExpanded,
+                    onShowDropDownMenu = { dropDownMenuExpanded = true },
+                    onGloballyPositioned = { buttonSize = it },
+                    dropDownMenuOnDismissRequest = { dropDownMenuExpanded = false },
+                    buttonSize = buttonSize,
+                    isMultimediaNull = true,
+                    onAddToBookmarksClick = { onAddToBookmarkClick() },
+                    onAddToFavoritesClick = { onAddToFavoriteClick() }
+                )
+            }
+        } else {
+            val model = if(multimedia.size > 3) multimedia.get(2) else multimedia.get(1)
+            if (model?.format != "Standard Thumbnail") {
+                Column {
+                    MySubComposeImage(model = model)
+                    ArticleContent(
+                        article = article,
+                        duration = duration,
+                        dropDownMenuExpanded = dropDownMenuExpanded,
+                        onShowDropDownMenu = { dropDownMenuExpanded = true },
+                        onGloballyPositioned = { buttonSize = it },
+                        dropDownMenuOnDismissRequest = { dropDownMenuExpanded = false },
+                        buttonSize = buttonSize,
+                        isMultimediaNull = true,
+                        onAddToBookmarksClick = { onAddToBookmarkClick() },
+                        onAddToFavoritesClick = { onAddToFavoriteClick() }
+                    )
+                }
+            } else {
+                Row {
+                    MySubComposeImage(model = model)
+                    ArticleContent(
+                        article = article,
+                        duration = duration,
+                        dropDownMenuExpanded = dropDownMenuExpanded,
+                        onShowDropDownMenu = { dropDownMenuExpanded = true },
+                        onGloballyPositioned = { buttonSize = it },
+                        dropDownMenuOnDismissRequest = { dropDownMenuExpanded = false },
+                        buttonSize = buttonSize,
+                        isMultimediaNull = true,
+                        onAddToBookmarksClick = { onAddToBookmarkClick() },
+                        onAddToFavoritesClick = { onAddToFavoriteClick() }
+                    )
                 }
             }
-            Column(
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(
-                    text = article.title,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 13.sp,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = article.articleabstract,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    lineHeight = 15.sp
-                )
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    IconButton(
-                        onClick = { dropDownMenuExpanded = true },
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.icons8_dots_45___),
-                            contentDescription = "More",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .clickable { dropDownMenuExpanded = true }
-                                .onGloballyPositioned { coordinates ->
-                                    buttonSize = coordinates.size.toSize()
-                                }
-                        )
-                    }
-
-                    DropdownMenu(
-                        expanded = dropDownMenuExpanded,
-                        onDismissRequest = { dropDownMenuExpanded = false },
-                        offset = DpOffset(x = -buttonSize.width.dp, y = (-buttonSize.height.dp)),
-                        properties = PopupProperties(focusable = true),
-                        modifier = Modifier
-                            .background(color = Color.White)
-                    ) {
-                        DropdownMenuItem(
-                            leadingIcon = {
-                                Icon(painterResource(id = bookmarkIcon), contentDescription ="Bookmark")
-                            },
-                            text = {
-                                Text(text = "Bookmark")
-                            },
-                            onClick = {
-                                isBookmarkClick = !isBookmarkClick
-                                onAddToBookmarkClick()
-                            }
-                        )
-                        DropdownMenuItem(
-                            leadingIcon = {
-                                Icon(imageVector = favoriteIcon, contentDescription ="Favorite")
-                            },
-                            text = {
-                                Text(text = "Favorite")
-                            },
-                            onClick = {
-                                isFavoriteClick = !isFavoriteClick
-                                onAddToFavoriteClick()
-                                Toast.makeText(context, "Added to Favorites!", Toast.LENGTH_LONG).show()
-                            }
-                        )
-                    }
-                }
-            }
-
         }
-
     }
 }
 
-val sampleArticle = NewsArticle(
-    articleabstract = "In a groundbreaking discovery, scientists have uncovered a new species of dinosaur that roamed the earth millions of years ago.",
-    byline = "By John Doe",
-    itemType = "Article",
-    multimedia = listOf(
-        Multimedia(
-            url = "https://example.com/dinosaur.jpg",
-            format = "superJumbo",
-            height = 1200,
-            width = 1600,
-            type = "image",
-            subtype = "photo",
-            caption = "The newly discovered species of dinosaur, believed to be one of the largest ever found.",
-            copyright = "sample copyright"
-        )
-    ),
-    publishedDate = "2024-05-24",
-    section = "Science",
-    subsection = "Paleontology",
-    title = "New Species of Dinosaur Discovered",
-    nyturi = "nyt://article/12345678-90ab-cdef-1234-567890abcdef",
-    htmlurl = "https://www.nytimes.com/2024/05/24/science/new-dinosaur-species.html"
-)
 
 
 

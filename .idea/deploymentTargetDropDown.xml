@@ -2,16 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="BottomAppBarPreview">
+      <entry key="DeckOfCardsPrview">
+        <State />
+      </entry>
+      <entry key="HeadlineNewsArticlePreview">
+        <State />
+      </entry>
+      <entry key="HeadlinesScreenPreview">
+        <State />
+      </entry>
+      <entry key="HomeScreenPreview">
         <State />
       </entry>
       <entry key="ProfileScreenPreview">
-        <State />
-      </entry>
-      <entry key="WebViewScreenPreview">
-        <State />
-      </entry>
-      <entry key="WebViewScreenTest">
         <State />
       </entry>
       <entry key="app">

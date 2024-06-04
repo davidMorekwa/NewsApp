@@ -1,101 +1,108 @@
 package com.example.newsapp.data.repositories.remote
 
 import android.util.Log
-import androidx.room.withTransaction
-import com.example.newsapp.data.model.Doc
+import com.example.newsapp.data.model.response.search.Doc
 import com.example.newsapp.data.model.NewsArticle
-import com.example.newsapp.data.repositories.local.LocalRepository
 import com.example.newsapp.data.repositories.local.NewsDatabase
+import com.example.newsapp.data.repositories.remote.services.LatestNewsService
+import com.example.newsapp.data.repositories.remote.services.TopHeadlineNewsService
 
 const val TAG = "REMOTE REPOSITORY"
 class RemoteRepositoryImpl(
-    private val newsApiService: NewsApiService,
+    private val topHeadlineNewsService: TopHeadlineNewsService,
+    private val latestNewsService: LatestNewsService,
     private val newsDatabase: NewsDatabase,
 ): RemoteRepository {
     val TAG = "REMOTE REPO IMPL"
     override suspend fun getTopStories(): List<NewsArticle> {
-        Log.d(TAG, "Getting articles")
-        val response = newsApiService.getTopStories()
-        val body = response.body()
-        if(body==null){
-            return emptyList()
-        }
+        Log.d(TAG, "Getting Top headlines articles")
+        val response = topHeadlineNewsService.getTopStories()
+        val body = response.body() ?: return emptyList()
         Log.d(TAG, "Response: ${body.results.size}")
         return body.results
     }
-
     override suspend fun getCategoryTopStories(category: String): List<NewsArticle> {
         Log.d(TAG, "Category selected: ${category}")
         val response = when(category){
             "Arts" -> {
-                newsApiService.getArtsTopStories()
+                topHeadlineNewsService.getArtsTopStories()
             }
             "Automobiles"  ->{
-                newsApiService.getAutomobilesTopStories()
+                topHeadlineNewsService.getAutomobilesTopStories()
             }
             "Business" -> {
-                newsApiService.getBusinessTopStories()
+                topHeadlineNewsService.getBusinessTopStories()
             }
             "Fashion" ->{
-                newsApiService.getFashionTopStories()
+                topHeadlineNewsService.getFashionTopStories()
             }
             "Food" ->{
-                newsApiService.getFoodTopStories()
+                topHeadlineNewsService.getFoodTopStories()
             }
             "Health" -> {
-                newsApiService.getHealthTopStories()
+                topHeadlineNewsService.getHealthTopStories()
             }
             "Home" ->{
-                newsApiService.getHomeTopStories()
+                topHeadlineNewsService.getHomeTopStories()
             }
             "Insider" -> {
-                newsApiService.getInsiderTopStories()
+                topHeadlineNewsService.getInsiderTopStories()
             }
             "Magazine" -> {
-                newsApiService.getMagazineTopStories()
+                topHeadlineNewsService.getMagazineTopStories()
             }
             "Movies" -> {
-                newsApiService.getMoviesTopStories()
+                topHeadlineNewsService.getMoviesTopStories()
             }
             "Opinion" -> {
-                newsApiService.getOpinionTopStories()
+                topHeadlineNewsService.getOpinionTopStories()
             }
             "Politics" -> {
-                newsApiService.getPoliticsTopStories()
+                topHeadlineNewsService.getPoliticsTopStories()
             }
             "Real Estate" -> {
-                newsApiService.getRealEstateTopStories()
+                topHeadlineNewsService.getRealEstateTopStories()
             }
             "Science" -> {
-                newsApiService.getScienceTopStories()
+                topHeadlineNewsService.getScienceTopStories()
             }
             "Sports" -> {
-                newsApiService.getSportsTopStories()
+                topHeadlineNewsService.getSportsTopStories()
             }
             "Technology" -> {
-                newsApiService.getTechnologyTopStories()
+                topHeadlineNewsService.getTechnologyTopStories()
             }
             "Travel" -> {
-                newsApiService.getTravelTopStories()
+                topHeadlineNewsService.getTravelTopStories()
             }
             "US" -> {
-                newsApiService.getUSTopStories()
+                topHeadlineNewsService.getUSTopStories()
             }
             "World" -> {
-                newsApiService.getWorldTopStories()
+                topHeadlineNewsService.getWorldTopStories()
             }
             else -> {
-                newsApiService.getTopStories()
+                topHeadlineNewsService.getTopStories()
             }
         }
         val articles = response.body() ?: return emptyList()
         return articles.results
     }
-
     override suspend fun searchArticle(query: String): List<Doc> {
-        var response = newsApiService.searchArticle(query = query)
+        var response = topHeadlineNewsService.searchArticle(query = query)
         Log.d(TAG, "Response code: ${response.code()}")
         var body = response.body() ?: return emptyList()
         return body.response.docs
     }
+
+    override suspend fun getLatestNews(): List<NewsArticle> {
+        Log.d(TAG, "Getting Latest News articles")
+        val response = latestNewsService.getLatestNews()
+        Log.d(TAG, "Response ${response}")
+        val body = response.body() ?: return emptyList()
+        Log.d(TAG, "Response: ${body.results.size}")
+//        return body.results.map { it -> it.toNewsArticle() }
+        return body.results
+    }
+
 }

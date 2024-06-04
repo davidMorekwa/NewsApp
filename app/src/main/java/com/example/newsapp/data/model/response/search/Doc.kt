@@ -1,7 +1,8 @@
-package com.example.newsapp.data.model
+package com.example.newsapp.data.model.response.search
 
 
-import android.util.Log
+import com.example.newsapp.data.model.Multimedia
+import com.example.newsapp.data.model.NewsArticle
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -37,7 +38,7 @@ data class Doc(
     @Json(name = "word_count")
     var wordCount: Int?
 ){
-    fun toNewsArticle():NewsArticle{
+    fun toNewsArticle(): NewsArticle {
         return NewsArticle(
             articleabstract = abstract ?: "",
             htmlurl = webUrl ?: "",
