@@ -1,13 +1,10 @@
 package com.example.newsapp.ui.screens.home
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.EaseInOutQuart
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,9 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -41,7 +35,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +48,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.newsapp.R
@@ -116,7 +108,7 @@ fun HomeScreen(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 40.dp)
+                .padding(top = 40.dp, start = 8.dp, end = 8.dp)
                 .pullRefresh(pullRefreshState)
         ) {
             PullRefreshIndicator(
@@ -138,13 +130,14 @@ fun HomeScreen(
                     item {
                         Button(
                             onClick = {
-//                                navHostController.navigate(NavigationScreens.HEADLINE_ARTICLES_SCREEN.name)
-                                      /* TODO(Navigate to the Headlines Screen) */
+                                navHostController.navigate(NavigationScreens.HEADLINE_ARTICLES_SCREEN.name)
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent,
                                 contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
-                            )
+                            ),
+                            modifier = Modifier
+                                .padding(0.dp)
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,

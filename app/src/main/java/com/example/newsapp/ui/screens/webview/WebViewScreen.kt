@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,14 +27,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.screens.webview.WebView.WebViewImpl
-import com.example.newsapp.ui.screens.webview.WebView.WebViewInterface
 import com.example.newsapp.ui.theme.NewsAppTheme
 
 const val TAG = "WEBVIEW SCREEEN"
@@ -63,9 +61,9 @@ fun WebViewScreen(
                             .fillMaxWidth()
                     ) {
                         IconButton(
-                            onClick = { navHostController.navigate(NavigationScreens.HOME_SCREEN.name) },
+                            onClick = { navHostController.popBackStack() },
                         ) {
-                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 },

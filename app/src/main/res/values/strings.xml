@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">News App</string>
     <string name="homescreen_headlines">Headlines</string>
+    <string name="title_activity_authentication">AuthenticationActivity</string>
+    <string name="web_client_ID">132332216184-jf9m7dkcnvgokprn03nnvcnas11imda9.apps.googleusercontent.com</string>
+    <string name="title_activity_auth">AuthActivity</string>
+    <string name="title_activity_main2">MainActivity2</string>
 </resources>

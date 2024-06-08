@@ -2,17 +2,15 @@ package com.example.newsapp.ui.screens.search
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.repositories.local.LocalRepository
 import com.example.newsapp.data.repositories.local.entities.RecentSearchEntity
 import com.example.newsapp.data.repositories.remote.RemoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 const val TAG = "SEARCH SCREEN VIEWMODEL"
@@ -20,14 +18,16 @@ class SearchScreenViewModel(
     private val remoteRepository: RemoteRepository,
     private val localRepository: LocalRepository
 ): ViewModel() {
-    private val _uiState: MutableStateFlow<SearchScreenUiState> = MutableStateFlow(
+    private val _searchResultUiState: MutableStateFlow<SearchScreenUiState> = MutableStateFlow(
         SearchScreenUiState()
     )
+    private val _searchString: MutableStateFlow<String> = MutableStateFlow("")
     private val _isSearch: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var _recentSearch: MutableStateFlow<List<RecentSearchEntity>> = MutableStateFlow(emptyList())
-    val uiState = _uiState.asStateFlow()
+    val searchResultUiState = _searchResultUiState.asStateFlow()
     val isSearch = _isSearch.asStateFlow()
     val recentSearch = _recentSearch.asStateFlow()
+    val searchString = _searchString.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -42,43 +42,57 @@ class SearchScreenViewModel(
     private val _scrollUp = MutableStateFlow(false)
     val scrollUp: StateFlow<Boolean>
         get() = _scrollUp.asStateFlow()
-
-    fun setIsSearch(value: Boolean){
-        viewModelScope.launch(Dispatchers.Main) {
-            _isSearch.value = value
-        }
-    }
-
     fun updateScrollPosition(newScrollIndex: Int) {
         if (newScrollIndex == lastScrollIndex) return
 
         _scrollUp.value = newScrollIndex > lastScrollIndex
         lastScrollIndex = newScrollIndex
     }
+    fun setIsSearch(value: Boolean){
+        viewModelScope.launch(Dispatchers.IO) {
+            _isSearch.value = value
+        }
+    }
+
+
 
     fun searchArticle(query: String){
         viewModelScope.launch(Dispatchers.IO) {
             Log.d(TAG, "Calling the searchArticle function")
+            _searchString.value = query
+            _searchResultUiState.value = SearchScreenUiState(articles = emptyList())
             val results = remoteRepository.searchArticle(query)
             Log.d(TAG, "Results: ${results.size}")
-            _isSearch.value = true
-            _uiState.value = SearchScreenUiState(articles = results.map { it -> it.toNewsArticle() })
+            setIsSearch(true)
+            _searchResultUiState.value = SearchScreenUiState(articles = results.map { it -> it.toNewsArticle() })
             localRepository.insertRecentSearch(query)
         }
     }
     fun categoryHeadline(category: String){
-        viewModelScope.launch {
-            _isSearch.value = true
-            Log.d(TAG, "Getting category headlines")
+        viewModelScope.launch(Dispatchers.IO) {
+            setIsSearch(false)
+            _searchResultUiState.value = SearchScreenUiState(articles = emptyList())
+            Log.d(TAG, "Getting ${category} headlines")
+            _searchString.value = category
             val results = remoteRepository.getCategoryTopStories(category)
             Log.d(TAG, "Results: ${results.size}")
-            _isSearch.value = true
-            _uiState.value.articles = results
+            _searchResultUiState.value = SearchScreenUiState(articles = results)
+
         }
     }
     fun deleteSearchTerm(string: String){
         viewModelScope.launch {
             localRepository.deleteSearchTerm(string)
+        }
+    }
+    fun addToFavorites(article: NewsArticle){
+        viewModelScope.launch(Dispatchers.IO) {
+            localRepository.addToFavorites(article)
+        }
+    }
+    fun addToBookmarks(article: NewsArticle){
+        viewModelScope.launch(Dispatchers.IO) {
+            localRepository.addToBookmark(article)
         }
     }
 }

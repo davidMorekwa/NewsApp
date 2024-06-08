@@ -82,9 +82,12 @@ fun NewsAppTheme(
   } else {
     DarkColors
   }
+    val fontFamily = gothicFont
+    val typography = Typography
 
   MaterialTheme(
     colorScheme = colors,
-    content = content
+    content = content,
+      typography = typography
   )
 }

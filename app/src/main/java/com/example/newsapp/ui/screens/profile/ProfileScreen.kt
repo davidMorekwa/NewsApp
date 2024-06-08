@@ -2,6 +2,7 @@ package com.example.newsapp.ui.screens.profile
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import android.widget.ToggleButton
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -51,11 +53,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
+import androidx.navigation.NavHostController
 import com.example.newsapp.ui.theme.NewsAppTheme
 import com.example.newsapp.R
 import com.example.newsapp.data.utils.Constants
 import com.example.newsapp.data.utils.Constants.STORED_THEME
 import com.example.newsapp.ui.activities.dataStore
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.map
 
 
@@ -63,7 +68,8 @@ import kotlinx.coroutines.flow.map
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    profileScreenViewModel: ProfileScreenViewModel,
+//    profileScreenViewModel: ProfileScreenViewModel,
+//    navHostController: NavHostController
 ) {
     var isDisplayPreferencesClicked: Boolean by rememberSaveable {
         mutableStateOf(false)
@@ -72,6 +78,8 @@ fun ProfileScreen(
         return@map value[STORED_THEME]
     }
     val isDarkTheme = useDarkTheme.collectAsState(initial = false)
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    Log.d(TAG, "Current user ${currentUser?.email}")
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -83,9 +91,11 @@ fun ProfileScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { /*TODO*/ }
+                        onClick = {
+//                            navHostController.popBackStack()
+                        }
                     ) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 modifier = Modifier.height(40.dp)
@@ -114,7 +124,7 @@ fun ProfileScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Name",
+                    text = currentUser?.email.toString(),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -227,7 +237,7 @@ fun ProfileScreen(
                             Switch(
                                 checked = isDarkTheme.value ?: false,
                                 onCheckedChange = {
-                                    profileScreenViewModel.changeTheme()
+//                                    profileScreenViewModel.changeTheme()
                                 },
                             )
                         }
@@ -315,6 +325,6 @@ fun ProfileScreenPreview() {
     NewsAppTheme(
         useDarkTheme = true
     ) {
-//        ProfileScreen()
+        ProfileScreen()
     }
 }

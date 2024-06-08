@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(
@@ -65,6 +64,7 @@ class HomeScreenViewModel(
 
     fun getCategoryTopStories(category: String){
         viewModelScope.launch(Dispatchers.IO) {
+            _topHeadlineUiState.value = emptyList()
             val results = remoteRepository.getCategoryTopStories(category)
             _topHeadlineUiState.value = results
         }
