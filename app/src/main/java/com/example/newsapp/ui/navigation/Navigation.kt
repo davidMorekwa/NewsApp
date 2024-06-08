@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.newsapp.ui.ViewModelProvider
-import com.example.newsapp.ui.screens.headlines.HeadlinesScreen
+import com.example.newsapp.ui.screens.home.headlines.HeadlinesScreen
 import com.example.newsapp.ui.screens.home.HomeScreen
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
 import com.example.newsapp.ui.screens.profile.ProfileScreen

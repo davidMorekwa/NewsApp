@@ -130,8 +130,8 @@ fun SearchScreen(
                     isTextFieldFocused = true
                 },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Black,
-                    focusedLeadingIconColor = Color.Black
+                    focusedBorderColor = MaterialTheme.colorScheme.onSurface,
+                    focusedLeadingIconColor = MaterialTheme.colorScheme.onSurface
                 ),
                 placeholder = {
                     Text(text = "Search...")

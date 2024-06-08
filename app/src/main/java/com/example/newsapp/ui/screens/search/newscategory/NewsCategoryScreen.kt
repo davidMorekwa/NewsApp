@@ -36,9 +36,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -56,6 +56,7 @@ import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.utils.Constants
 import com.example.newsapp.ui.components.MyDropDownMenu
 import com.example.newsapp.ui.navigation.NavigationScreens
+import com.example.newsapp.ui.screens.home.headlines.shimmerLoadingAnimation
 import com.example.newsapp.ui.screens.search.SearchScreenViewModel
 import com.example.newsapp.ui.screens.webview.WebViewViewModel
 import com.example.newsapp.ui.theme.NewsAppTheme
@@ -239,17 +240,14 @@ fun CategoryScreenArticleItem(
                     ) {
                         val state = painter.state
                         if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                CircularProgressIndicator(
-                                    color = MaterialTheme.colorScheme.outline,
-                                    strokeWidth = 1.dp,
-                                    strokeCap = StrokeCap.Round,
-                                )
-                            }
+                            Box(
+                                modifier = Modifier
+                                    .clip(shape = RoundedCornerShape(12.dp))
+                                    .background(color = Color.LightGray)
+                                    .height(120.dp)
+                                    .fillMaxWidth()
+                                    .shimmerLoadingAnimation()
+                            )
 
                         } else {
                             SubcomposeAsyncImageContent()

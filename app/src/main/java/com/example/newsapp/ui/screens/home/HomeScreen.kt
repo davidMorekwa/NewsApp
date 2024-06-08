@@ -130,8 +130,7 @@ fun HomeScreen(
                     item {
                         Button(
                             onClick = {
-//                                navHostController.navigate(NavigationScreens.HEADLINE_ARTICLES_SCREEN.name)
-                                      /* TODO(Navigate to the Headlines Screen) */
+                                navHostController.navigate(NavigationScreens.HEADLINE_ARTICLES_SCREEN.name)
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent,
