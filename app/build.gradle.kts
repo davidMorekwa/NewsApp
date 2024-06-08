@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp").version("1.6.0-1.0.1")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 
@@ -81,7 +82,16 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
     // moshi
     implementation ("com.squareup.moshi:moshi-kotlin:1.12.0")
+    //palette API
     implementation("androidx.palette:palette:1.0.0")
+    //firebase
+    implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+
+
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
     // room
     implementation("androidx.room:room-runtime:2.6.1")

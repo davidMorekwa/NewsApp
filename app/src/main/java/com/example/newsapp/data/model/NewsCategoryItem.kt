@@ -2,5 +2,6 @@ package com.example.newsapp.data.model
 
 data class NewsCategoryItem(
     val id: Int,
-    val name: String
+    val name: String,
+    val imageURl: String,
 )
