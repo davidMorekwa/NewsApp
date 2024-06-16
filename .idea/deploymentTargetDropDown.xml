@@ -2,16 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="HeadlinesScreenPreview">
-        <State />
-      </entry>
       <entry key="MyPreview">
         <State />
       </entry>
-      <entry key="NewsCategoryScreenArticle">
+      <entry key="NewsCategoryScreenPreview">
         <State />
       </entry>
-      <entry key="NewsCategoryScreenPreview">
+      <entry key="OnBoardingScreenPreview">
+        <State />
+      </entry>
+      <entry key="OnBoardingScreenPreview (1)">
         <State />
       </entry>
       <entry key="SearchScreenPreview">

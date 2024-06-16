@@ -2,10 +2,8 @@ package com.example.newsapp.data.repositories.local
 
 import androidx.room.withTransaction
 import com.example.newsapp.data.model.NewsArticle
-import com.example.newsapp.data.repositories.local.dao.NewsDao
-import com.example.newsapp.data.repositories.local.dao.RecentSearchDao
 import com.example.newsapp.data.repositories.local.entities.ArticleWithMedia
-import com.example.newsapp.data.repositories.local.entities.NewsArticleEntity
+import com.example.newsapp.data.repositories.local.entities.NewsCategoryEntity
 import com.example.newsapp.data.repositories.local.entities.RecentSearchEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -64,5 +62,17 @@ class LocalRepositoryImpl(
 
     override suspend fun deleteSearchTerm(string: String) {
         return newsDatabase.recentSearchDao().deleteSearchTerm(string)
+    }
+
+    override suspend fun addCategory(categoryEntity: NewsCategoryEntity) {
+        return newsDatabase.newsCategoryDao().addCategory(categoryEntity)
+    }
+
+    override suspend fun getCategories(): List<NewsCategoryEntity> {
+        return newsDatabase.newsCategoryDao().getCategories()
+    }
+
+    override suspend fun deleteCategory(categoryEntity: NewsCategoryEntity) {
+        return newsDatabase.newsCategoryDao().deleteCategory(categoryEntity)
     }
 }

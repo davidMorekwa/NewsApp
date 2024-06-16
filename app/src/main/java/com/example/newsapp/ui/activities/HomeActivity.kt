@@ -6,13 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,13 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.newsapp.ui.ViewModelProvider
 import com.example.newsapp.ui.components.BottomAppBar
 import com.example.newsapp.ui.navigation.Navigation
-import com.example.newsapp.ui.screens.home.HomeScreenViewModel
 import com.example.newsapp.ui.theme.NewsAppTheme
 import com.google.firebase.auth.FirebaseAuth
 
@@ -72,10 +67,6 @@ class HomeActivity : ComponentActivity() {
 fun NewsApp(
     navHostController: NavHostController,
 ) {
-    val homeScreenViewModel:HomeScreenViewModel = viewModel(factory = ViewModelProvider.factory)
-    val scrollUpState = homeScreenViewModel.scrollUp.collectAsState()
-    val bottomAppBarPosition by animateFloatAsState(if (scrollUpState.value) 150f else 0f)
-    val topAppBarPosition by animateFloatAsState(if (scrollUpState.value) -150f else 0f)
 
     var selectedIcon by rememberSaveable {
         mutableStateOf(0)
@@ -90,7 +81,6 @@ fun NewsApp(
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                position = bottomAppBarPosition,
                 navHostController = navHostController,
                 selectedIcon = selectedIcon,
                 onIconClick = {
@@ -101,8 +91,7 @@ fun NewsApp(
     ) {
         Navigation(
             navController = navHostController,
-            homeScreenViewModel = homeScreenViewModel,
-            scrollUpState = scrollUpState,
+//            scrollUpState = scrollUpState,
         )
     }
 }

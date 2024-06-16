@@ -34,7 +34,8 @@ fun ArticleContent(
     buttonSize: Size,
     isMultimediaNull: Boolean,
     onAddToBookmarksClick:()->Unit,
-    onAddToFavoritesClick: ()-> Unit
+    onAddToFavoritesClick: ()-> Unit,
+    onGeminisClick: ()->Unit
 ) {
 
     Column(
@@ -79,7 +80,8 @@ fun ArticleContent(
                     dropDownMenuExpanded = dropDownMenuExpanded,
                     dropDownMenuOnDismissRequest = { dropDownMenuOnDismissRequest() },
                     onAddToBookmarkClick = { onAddToBookmarksClick() },
-                    onAddToFavoriteClick = { onAddToFavoritesClick() }
+                    onAddToFavoriteClick = { onAddToFavoritesClick() },
+                    onGeminisClick = { onGeminisClick() }
                 )
 
             }

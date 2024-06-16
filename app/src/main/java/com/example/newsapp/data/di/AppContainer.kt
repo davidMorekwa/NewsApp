@@ -1,16 +1,19 @@
 package com.example.newsapp.data.di
 
 import android.content.Context
+import com.example.newsapp.BuildConfig
 import com.example.newsapp.data.repositories.auth.AuthRepository
 import com.example.newsapp.data.repositories.auth.AuthRepositoryImpl
 import com.example.newsapp.data.repositories.local.LocalRepository
 import com.example.newsapp.data.repositories.local.LocalRepositoryImpl
 import com.example.newsapp.data.repositories.local.NewsDatabase
-import com.example.newsapp.data.repositories.remote.services.TopHeadlineNewsService
 import com.example.newsapp.data.repositories.remote.RemoteRepository
 import com.example.newsapp.data.repositories.remote.RemoteRepositoryImpl
 import com.example.newsapp.data.repositories.remote.services.LatestNewsService
+import com.example.newsapp.data.repositories.remote.services.TopHeadlineNewsService
 import com.example.newsapp.data.utils.Constants
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.generationConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -23,6 +26,7 @@ interface AppContainer {
     val remoteRepository: RemoteRepository
     val localRepository: LocalRepository
     val authRepository: AuthRepository
+    val generativeModel: GenerativeModel
 //    val pager: Pager<Int, NewsArticleEntity>
 }
 
@@ -34,6 +38,7 @@ class AppContainerImpl(context: Context): AppContainer{
     val moshi: Moshi = Moshi.Builder()
         .addLast(KotlinJsonAdapterFactory())
         .build()
+
 
     // Retrofit Builders
 
@@ -68,6 +73,23 @@ class AppContainerImpl(context: Context): AppContainer{
     }
     override val authRepository: AuthRepository by lazy {
         AuthRepositoryImpl(firebaseAuth = firebaseAuth)
+    }
+    override val generativeModel: GenerativeModel by lazy {
+        GenerativeModel(
+            "gemini-1.5-flash",
+            // Retrieve API key as an environmental variable defined in a Build Configuration
+            // see https://github.com/google/secrets-gradle-plugin for further instructions
+            BuildConfig.geminiApiKey,
+            generationConfig = generationConfig {
+                temperature = 1f
+                topK = 64
+                topP = 0.95f
+                maxOutputTokens = 8192
+                responseMimeType = "text/plain"
+            },
+            // safetySettings = Adjust safety settings
+            // See https://ai.google.dev/gemini-api/docs/safety-settings
+        )
     }
 //    @OptIn(ExperimentalPagingApi::class)
 //    override val pager: Pager<Int, NewsArticleEntity>  =

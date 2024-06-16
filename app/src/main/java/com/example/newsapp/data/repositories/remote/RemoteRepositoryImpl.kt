@@ -1,8 +1,9 @@
 package com.example.newsapp.data.repositories.remote
 
 import android.util.Log
-import com.example.newsapp.data.model.response.search.Doc
 import com.example.newsapp.data.model.NewsArticle
+import com.example.newsapp.data.model.NewsCategoryItem
+import com.example.newsapp.data.model.response.search.Doc
 import com.example.newsapp.data.repositories.local.NewsDatabase
 import com.example.newsapp.data.repositories.remote.services.LatestNewsService
 import com.example.newsapp.data.repositories.remote.services.TopHeadlineNewsService
@@ -88,13 +89,76 @@ class RemoteRepositoryImpl(
         val articles = response.body() ?: return emptyList()
         return articles.results
     }
+    override suspend fun getCategoryLatestNews(category: String): List<NewsArticle> {
+        Log.d(TAG, "Category selected: ${category}")
+        val response = when(category){
+            "Arts" -> {
+                latestNewsService.getArtsLatestNews()
+            }
+            "Automobiles"  ->{
+                latestNewsService.getAutomobilesLatestNews()
+            }
+            "Business" -> {
+                latestNewsService.getBusinessLatestNews()
+            }
+            "Fashion" ->{
+                latestNewsService.getFashionLatestNews()
+            }
+            "Food" ->{
+                latestNewsService.getFoodLatestNews()
+            }
+            "Health" -> {
+                latestNewsService.getHealthLatestNews()
+            }
+            "Home" ->{
+                latestNewsService.getHomeAndGardenLatestNews()
+            }
+            "Insider" -> {
+                latestNewsService.getTimesInsiderLatestNews()
+            }
+            "Magazine" -> {
+                latestNewsService.getMagazineLatestNews()
+            }
+            "Movies" -> {
+                latestNewsService.getMoviesLatestNews()
+            }
+            "Opinion" -> {
+                latestNewsService.getOpinionLatestNews()
+            }
+            "Real Estate" -> {
+                latestNewsService.getRealEstateLatestNews()
+            }
+            "Science" -> {
+                latestNewsService.getScienceLatestNews()
+            }
+            "Sports" -> {
+                latestNewsService.getSportsLatestNews()
+            }
+            "Technology" -> {
+                latestNewsService.getTechnologyLatestNews()
+            }
+            "Travel" -> {
+                latestNewsService.getTravelLatestNews()
+            }
+            "US" -> {
+                latestNewsService.getUSLatestNews()
+            }
+            "World" -> {
+                latestNewsService.getWorldLatestNews()
+            }
+            else -> {
+                latestNewsService.getLatestNews()
+            }
+        }
+        val articles = response.body() ?: return emptyList()
+        return articles.results
+    }
     override suspend fun searchArticle(query: String): List<Doc> {
-        var response = topHeadlineNewsService.searchArticle(query = query)
+        val response = topHeadlineNewsService.searchArticle(query = query)
         Log.d(TAG, "Response code: ${response.code()}")
-        var body = response.body() ?: return emptyList()
+        val body = response.body() ?: return emptyList()
         return body.response.docs
     }
-
     override suspend fun getLatestNews(): List<NewsArticle> {
         Log.d(TAG, "Getting Latest News articles")
         val response = latestNewsService.getLatestNews()
@@ -105,4 +169,14 @@ class RemoteRepositoryImpl(
         return body.results
     }
 
+    override suspend fun getCatgories(): List<NewsCategoryItem> {
+        Log.d(TAG, "Getting News Categories")
+        val response = latestNewsService.getCategoryList()
+        val body = response.body() ?: return emptyList()
+        Log.d(TAG, "Response: ${body.results.size}")
+        return body.results.mapIndexed { index, it ->
+            Log.d(TAG, "${it.section} about to be converted")
+            it.toNewsCategoryItem(id = index+1)
+        }
+    }
 }

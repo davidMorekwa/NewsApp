@@ -28,7 +28,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -55,6 +54,7 @@ import androidx.navigation.NavHostController
 import com.example.newsapp.R
 import com.example.newsapp.data.model.NewsCategoryItem
 import com.example.newsapp.data.utils.Constants
+import com.example.newsapp.ui.components.CircleShapeIndicator
 import com.example.newsapp.ui.components.NewsArticleItem
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
@@ -112,9 +112,7 @@ fun HeadlinesScreen(
                     .padding(8.dp)
                     .background(color = MaterialTheme.colorScheme.background),
             ){
-                CircularProgressIndicator(
-                    color = if(isSystemInDarkTheme()) Color.White else Color.Black
-                )
+                CircleShapeIndicator()
             }
         } else {
             LazyColumn() {
@@ -126,15 +124,17 @@ fun HeadlinesScreen(
                             .fillMaxWidth()
                     ) {
                         items(Constants.listOfCategories) { newsCategoryItem: NewsCategoryItem ->
-                            CategoryItem(
-                                category = newsCategoryItem.name,
-                                key = newsCategoryItem.id,
-                                selectedCategory = selectedCategory,
-                                onCategoryButtonClick = {
-                                    selectedCategory = newsCategoryItem.id
-                                    homeScreenViewModel.getCategoryTopStories(it)
-                                }
-                            )
+                            newsCategoryItem.id?.let { it1 ->
+                                CategoryItem(
+                                    category = newsCategoryItem.name,
+                                    key = it1,
+                                    selectedCategory = selectedCategory,
+                                    onCategoryButtonClick = {
+                                        selectedCategory = newsCategoryItem.id
+                                        homeScreenViewModel.getCategoryTopStories(it)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -150,6 +150,9 @@ fun HeadlinesScreen(
                         },
                         onAddToBookmarkClick = {
                             homeScreenViewModel.addToBookmarks(article = article)
+                        },
+                        onGeminisClick = {
+                            homeScreenViewModel.getArticleSummary(articleURL = article.htmlurl)
                         }
                     )
                 }
