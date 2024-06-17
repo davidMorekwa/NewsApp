@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -63,7 +64,10 @@ fun MyDropDownMenu(
                     )
                 },
                 text = {
-                    Text(text = "Bookmark")
+                    Text(
+                        text = "Bookmark",
+                        fontFamily = FontFamily.Serif
+                    )
                 },
                 onClick = {
                     isBookmarkClick = !isBookmarkClick
@@ -78,7 +82,10 @@ fun MyDropDownMenu(
                     )
                 },
                 text = {
-                    Text(text = "Favorite")
+                    Text(
+                        text = "Favorite",
+                        fontFamily = FontFamily.Serif
+                    )
                 },
                 onClick = {
                     isFavoriteClick = !isFavoriteClick
@@ -91,7 +98,12 @@ fun MyDropDownMenu(
                 }
             )
             DropdownMenuItem(
-                text = { Text(text = "Gemini") },
+                text = {
+                    Text(
+                        text = "Ask Gemini",
+                        fontFamily = FontFamily.Serif
+                    )
+                },
                 onClick = {
                     onGeminisClick()
                 },

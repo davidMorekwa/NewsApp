@@ -29,6 +29,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +46,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.newsapp.R
 import com.example.newsapp.data.model.NewsArticle
-import com.example.newsapp.ui.components.CircleShapeIndicator
+import com.example.newsapp.ui.components.BallPulseSyncIndicator
 import com.example.newsapp.ui.components.HeadlineNewsArticle
 import com.example.newsapp.ui.components.MyBottomSheet
 import com.example.newsapp.ui.components.NewsArticleItem
@@ -69,9 +71,11 @@ fun HomeScreen(
     val isRefreshing = homeScreenViewModel.isRefereshing.collectAsState()
     val pullRefreshState = rememberPullRefreshState(isRefreshing.value, { homeScreenViewModel.refresh() })
     var chatHistory = homeScreenViewModel.chatHistoryState.collectAsState()
+    val previousArticlesCount = remember { mutableIntStateOf(latestNewsArticles.size) }
     var sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(sheetState.isVisible) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -120,9 +124,19 @@ fun HomeScreen(
                     .align(Alignment.TopCenter)
                     .zIndex(5f)
             )
+//            LaunchedEffect(isRefreshing.value) {
+//                if (!isRefreshing.value) {
+//                    val newArticlesCount = latestNewsArticles.size
+//                    if (newArticlesCount == previousArticlesCount.intValue) {
+//                        Toast.makeText(context, "No new articles available", Toast.LENGTH_SHORT)
+//                            .show()
+//                    }
+//                }
+////                    previousArticlesCount.intValue = newArticlesCount
+//            }
 
             if(headlineNewsArticles.value.isEmpty()){
-                CircleShapeIndicator()
+                BallPulseSyncIndicator()
             }else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
@@ -143,7 +157,7 @@ fun HomeScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(1.dp),
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .fillMaxWidth(0.4f)
                             ) {
 
                                 Text(
@@ -200,7 +214,8 @@ fun HomeScreenPreview() {
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         ){
 
         }

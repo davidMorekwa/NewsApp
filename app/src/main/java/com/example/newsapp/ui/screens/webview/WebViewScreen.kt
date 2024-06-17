@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
-import com.example.newsapp.ui.components.CircleShapeIndicator
+import com.example.newsapp.ui.components.BallPulseSyncIndicator
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.screens.webview.WebView.WebViewImpl
 import com.example.newsapp.ui.theme.NewsAppTheme
@@ -79,7 +79,7 @@ fun WebViewScreen(
                 .padding(top = 45.dp)
         ) {
             if(state.value.url.isNullOrBlank()){
-                CircleShapeIndicator()
+                BallPulseSyncIndicator()
             }else {
                 AndroidView(
                     modifier = Modifier.fillMaxSize(),

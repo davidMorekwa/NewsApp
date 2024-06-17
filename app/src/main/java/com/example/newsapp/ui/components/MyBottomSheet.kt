@@ -130,7 +130,8 @@ fun MyBottomSheet(
                                             .padding(16.dp),
                                         text = chats[index].parts.first().asTextOrNull()
                                             ?: "",
-                                        textAlign = if (role == "user") TextAlign.End else TextAlign.Start
+                                        textAlign = if (role == "user") TextAlign.End else TextAlign.Start,
+                                        fontFamily = FontFamily.Serif
                                     )
                                 }
                             }
@@ -141,16 +142,17 @@ fun MyBottomSheet(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                     ) {
-                                        BallPulseSyncIndicator(
-                                            ballDiameter = 20f
-                                        )
+                                        BallPulseSyncIndicator()
                                     }
                                 }
                             }
                         }
                     }
                     is GeminiUiState.Error -> {
-                        Text(text = chatHistory.message)
+                        Text(
+                            text = chatHistory.message,
+                            fontFamily = FontFamily.Serif
+                        )
                     }
                 }
             }

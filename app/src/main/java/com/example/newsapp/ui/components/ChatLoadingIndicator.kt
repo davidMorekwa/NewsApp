@@ -5,23 +5,28 @@ import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.newsapp.ui.theme.NewsAppTheme
 import kotlinx.coroutines.delay
 
 @Composable
 fun BallPulseSyncIndicator(
-    color: Color = Color.White,
+    color: Color = if(isSystemInDarkTheme()) Color.White else Color.Black.copy(alpha = 0.8f),
     delay: Long = 90L,
-    spaceBetweenBalls: Float = 20f,
-    ballDiameter: Float = 40f,
+    spaceBetweenBalls: Float = 15f,
+    ballDiameter: Float = 10f,
     animationDuration: Int = 350
 ) {
 
@@ -62,5 +67,16 @@ fun BallPulseSyncIndicator(
                 )
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LoadingPreview() {
+    NewsAppTheme {
+        androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            BallPulseSyncIndicator()
+        }
+
     }
 }

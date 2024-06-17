@@ -73,7 +73,10 @@ fun NewsArticleItem(
                         isMultimediaNull = true,
                         onAddToBookmarksClick = { onAddToBookmarkClick() },
                         onAddToFavoritesClick = { onAddToFavoriteClick() },
-                        onGeminisClick = { onGeminisClick() }
+                        onGeminisClick = {
+                            onGeminisClick()
+                            dropDownMenuExpanded = false
+                        }
                     )
             }
         } else {
@@ -92,7 +95,10 @@ fun NewsArticleItem(
                         isMultimediaNull = true,
                         onAddToBookmarksClick = { onAddToBookmarkClick() },
                         onAddToFavoritesClick = { onAddToFavoriteClick() },
-                        onGeminisClick = { onGeminisClick() }
+                        onGeminisClick = {
+                            onGeminisClick()
+                            dropDownMenuExpanded = false
+                        }
                     )
                 }
             } else {
@@ -109,7 +115,10 @@ fun NewsArticleItem(
                         isMultimediaNull = true,
                         onAddToBookmarksClick = { onAddToBookmarkClick() },
                         onAddToFavoritesClick = { onAddToFavoriteClick() },
-                        onGeminisClick = { onGeminisClick() }
+                        onGeminisClick = {
+                            onGeminisClick()
+                            dropDownMenuExpanded = false
+                        }
                     )
                 }
             }

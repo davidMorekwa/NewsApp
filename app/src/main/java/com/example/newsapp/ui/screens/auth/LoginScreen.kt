@@ -124,12 +124,14 @@ fun LoginScreen(
                         Text(
                             text = "Email Address",
                             fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Serif
                         )
                     },
                     placeholder = {
                         Text(
                             text = "example@gmail.com",
-                            fontWeight = FontWeight.Light
+                            fontWeight = FontWeight.Light,
+                            fontFamily = FontFamily.Serif
                         )
                     },
                     onValueChange = {
@@ -155,6 +157,7 @@ fun LoginScreen(
                         Text(
                             text = "Password",
                             fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Serif
                         )
                     },
                     onValueChange = {
@@ -176,7 +179,8 @@ fun LoginScreen(
                     androidx.compose.material3.Text(
                         text = "Invalid credentials!",
                         fontSize = 15.sp,
-                        color = Color.Red
+                        color = Color.Red,
+                        fontFamily = FontFamily.Serif
                     )
                 }
                 Button(
@@ -189,7 +193,7 @@ fun LoginScreen(
                     modifier = modifier
                         .fillMaxWidth()
                 ) {
-                    Text(text = "Submit")
+                    Text(text = "Submit", fontFamily = FontFamily.Serif)
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -216,7 +220,7 @@ fun LoginScreen(
                             .border(0.dp, Color.Transparent)
                             .buttonEffect()
                     ) {
-                        Text(text = "Register")
+                        Text(text = "Register", fontFamily = FontFamily.Serif)
                     }
                     Button(
                         onClick = {
@@ -237,7 +241,7 @@ fun LoginScreen(
                             .border(0.dp, Color.Transparent)
                             .buttonEffect()
                     ) {
-                        Text(text = "Forgot Password")
+                        Text(text = "Forgot Password", fontFamily = FontFamily.Serif)
                     }
                 }
                 if (logInState.value?.isLoading == true) {

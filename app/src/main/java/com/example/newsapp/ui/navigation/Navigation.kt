@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.newsapp.ui.ViewModelProvider
+import com.example.newsapp.ui.screens.auth.AuthViewModel
 import com.example.newsapp.ui.screens.home.HomeScreen
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
 import com.example.newsapp.ui.screens.home.headlines.HeadlinesScreen
@@ -23,6 +24,7 @@ fun Navigation(
     val homeScreenViewModel:HomeScreenViewModel = viewModel(factory = ViewModelProvider.factory)
     val searchScreenViewModel: SearchScreenViewModel = viewModel(factory = ViewModelProvider.factory)
     val webViewScreenViewModel: WebViewViewModel = viewModel(factory = ViewModelProvider.factory)
+    val authViewModel: AuthViewModel = viewModel(factory = ViewModelProvider.factory)
     NavHost(
         navController = navController,
         startDestination = NavigationScreens.HOME_SCREEN.name
@@ -48,6 +50,7 @@ fun Navigation(
         }
         composable(route = NavigationScreens.PROFILE_SCREEN.name){
             ProfileScreen(
+                authViewModel = authViewModel
             )
         }
         composable(route = NavigationScreens.HEADLINE_ARTICLES_SCREEN.name){

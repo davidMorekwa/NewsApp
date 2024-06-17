@@ -53,6 +53,7 @@ import coil.compose.SubcomposeAsyncImageContent
 import com.example.newsapp.R
 import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.utils.Constants
+import com.example.newsapp.ui.components.BallPulseSyncIndicator
 import com.example.newsapp.ui.components.CircleShapeIndicator
 import com.example.newsapp.ui.components.MyDropDownMenu
 import com.example.newsapp.ui.navigation.NavigationScreens
@@ -121,7 +122,7 @@ fun NewsCategoryScreen(
                     .background(color = MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
-                CircleShapeIndicator()
+                BallPulseSyncIndicator()
             }
         } else {
             LazyColumn(
