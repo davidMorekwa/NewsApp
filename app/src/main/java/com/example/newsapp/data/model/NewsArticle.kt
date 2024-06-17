@@ -1,11 +1,13 @@
 package com.example.newsapp.data.model
 
 
+import androidx.compose.runtime.Immutable
 import com.example.newsapp.data.repositories.local.entities.NewsArticleEntity
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.UUID
 
+@Immutable
 @JsonClass(generateAdapter = true)
 data class NewsArticle(
     @Json(name = "abstract")

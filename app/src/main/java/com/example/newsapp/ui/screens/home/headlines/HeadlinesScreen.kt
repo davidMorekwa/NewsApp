@@ -28,15 +28,17 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,11 +57,14 @@ import androidx.navigation.NavHostController
 import com.example.newsapp.R
 import com.example.newsapp.data.model.NewsCategoryItem
 import com.example.newsapp.data.utils.Constants
+import com.example.newsapp.ui.components.BallPulseSyncIndicator
+import com.example.newsapp.ui.components.MyBottomSheet
 import com.example.newsapp.ui.components.NewsArticleItem
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
 import com.example.newsapp.ui.screens.webview.WebViewViewModel
 import com.example.newsapp.ui.theme.NewsAppTheme
+import kotlinx.coroutines.launch
 
 const val TAG = "Headlines Screen"
 
@@ -76,6 +81,10 @@ fun HeadlinesScreen(
     var selectedCategory by rememberSaveable {
         mutableStateOf(1)
     }
+    var sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(sheetState.isVisible) }
+    var chatHistory = homeScreenViewModel.chatHistoryState.collectAsState()
+    val scope = rememberCoroutineScope()
     Log.d(TAG, "Articles size: ${articles.value.size}")
     Scaffold(
         topBar = {
@@ -104,6 +113,25 @@ fun HeadlinesScreen(
         },
         backgroundColor = MaterialTheme.colorScheme.background
     ) {
+        if(showBottomSheet) {
+            MyBottomSheet(
+                onDismissRequest = {
+                    scope.launch {
+                        sheetState.hide()
+                        showBottomSheet = false
+                    }
+                },
+                sheetState = sheetState,
+                chatHistory = chatHistory.value,
+                onSendClick = {
+                    homeScreenViewModel.sendMessage(message = it)
+                    scope.launch {
+                        sheetState.show()
+                        showBottomSheet = true
+                    }
+                }
+            )
+        }
         if (articles.value.isEmpty()){
             Box(
                 contentAlignment = Alignment.Center,
@@ -112,9 +140,7 @@ fun HeadlinesScreen(
                     .padding(8.dp)
                     .background(color = MaterialTheme.colorScheme.background),
             ){
-                CircularProgressIndicator(
-                    color = if(isSystemInDarkTheme()) Color.White else Color.Black
-                )
+                BallPulseSyncIndicator()
             }
         } else {
             LazyColumn() {
@@ -126,15 +152,17 @@ fun HeadlinesScreen(
                             .fillMaxWidth()
                     ) {
                         items(Constants.listOfCategories) { newsCategoryItem: NewsCategoryItem ->
-                            CategoryItem(
-                                category = newsCategoryItem.name,
-                                key = newsCategoryItem.id,
-                                selectedCategory = selectedCategory,
-                                onCategoryButtonClick = {
-                                    selectedCategory = newsCategoryItem.id
-                                    homeScreenViewModel.getCategoryTopStories(it)
-                                }
-                            )
+                            newsCategoryItem.id?.let { it1 ->
+                                CategoryItem(
+                                    category = newsCategoryItem.name,
+                                    key = it1,
+                                    selectedCategory = selectedCategory,
+                                    onCategoryButtonClick = {
+                                        selectedCategory = newsCategoryItem.id
+                                        homeScreenViewModel.getCategoryTopStories(it)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -150,6 +178,13 @@ fun HeadlinesScreen(
                         },
                         onAddToBookmarkClick = {
                             homeScreenViewModel.addToBookmarks(article = article)
+                        },
+                        onGeminisClick = {
+                            homeScreenViewModel.getArticleSummary(articleURL = article.htmlurl)
+                            scope.launch {
+                                sheetState.show()
+                                showBottomSheet = true
+                            }
                         }
                     )
                 }

@@ -63,7 +63,6 @@ import com.example.newsapp.data.model.NewsCategoryItem
 import com.example.newsapp.data.repositories.local.entities.RecentSearchEntity
 import com.example.newsapp.data.utils.Constants
 import com.example.newsapp.ui.navigation.NavigationScreens
-import com.example.newsapp.ui.screens.webview.WebViewViewModel
 import com.example.newsapp.ui.theme.NewsAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -71,7 +70,6 @@ import com.example.newsapp.ui.theme.NewsAppTheme
 @Composable
 fun SearchScreen(
     searchScreenViewModel: SearchScreenViewModel,
-    webViewViewModel: WebViewViewModel,
     navHostController: NavHostController
 ) {
     var searchValue by rememberSaveable {

@@ -16,6 +16,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +35,8 @@ fun ArticleContent(
     buttonSize: Size,
     isMultimediaNull: Boolean,
     onAddToBookmarksClick:()->Unit,
-    onAddToFavoritesClick: ()-> Unit
+    onAddToFavoritesClick: ()-> Unit,
+    onGeminisClick: ()->Unit
 ) {
 
     Column(
@@ -43,6 +45,7 @@ fun ArticleContent(
         Text(
             text = article.title,
             fontWeight = FontWeight.Black,
+            fontFamily = FontFamily.Serif,
             fontSize = 13.sp,
         )
         if (isMultimediaNull) {
@@ -79,7 +82,8 @@ fun ArticleContent(
                     dropDownMenuExpanded = dropDownMenuExpanded,
                     dropDownMenuOnDismissRequest = { dropDownMenuOnDismissRequest() },
                     onAddToBookmarkClick = { onAddToBookmarksClick() },
-                    onAddToFavoriteClick = { onAddToFavoritesClick() }
+                    onAddToFavoriteClick = { onAddToFavoritesClick() },
+                    onGeminisClick = { onGeminisClick() }
                 )
 
             }

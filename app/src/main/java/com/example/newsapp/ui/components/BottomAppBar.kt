@@ -23,8 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -35,7 +33,6 @@ import com.example.newsapp.ui.theme.NewsAppTheme
 
 @Composable
 fun BottomAppBar(
-    position: Float,
     navHostController: NavHostController,
     selectedIcon: Int,
     onIconClick: (id: Int) -> Unit
@@ -83,7 +80,6 @@ fun BottomAppBar(
 
     Surface(
         modifier = Modifier
-            .graphicsLayer { translationY = position }
             .height(35.dp),
         color = Color.Black
     ) {
@@ -153,7 +149,6 @@ fun BottomAppBar(
 fun BottomAppBarPreview() {
     NewsAppTheme {
         BottomAppBar(
-            position = 1f,
             onIconClick = {},
             navHostController = rememberNavController(),
             selectedIcon = 1

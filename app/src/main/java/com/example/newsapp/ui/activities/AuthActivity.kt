@@ -18,6 +18,8 @@ import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.screens.auth.AuthViewModel
 import com.example.newsapp.ui.screens.auth.LoginScreen
 import com.example.newsapp.ui.screens.auth.RegistrationScreen
+import com.example.newsapp.ui.screens.onBoarding.OnBoardingScreen
+import com.example.newsapp.ui.screens.onBoarding.OnBoardingViewModel
 import com.example.newsapp.ui.theme.NewsAppTheme
 
 class AuthActivity : ComponentActivity() {
@@ -43,6 +45,7 @@ fun AuthNavigation(
     navController: NavHostController,
 ) {
     val authViewModel: AuthViewModel = viewModel(factory = ViewModelProvider.factory)
+    val onBoardingViewModel: OnBoardingViewModel = viewModel(factory = ViewModelProvider.factory)
     NavHost(
         navController = navController,
         startDestination = NavigationScreens.LOGIN_SCREEN.name
@@ -57,6 +60,11 @@ fun AuthNavigation(
             RegistrationScreen(
                 navHostController = navController,
                 authViewModel = authViewModel
+            )
+        }
+        composable(route = NavigationScreens.ON_BOARDING_SCREEN.name){
+            OnBoardingScreen(
+                onBoardingViewModel = onBoardingViewModel
             )
         }
     }

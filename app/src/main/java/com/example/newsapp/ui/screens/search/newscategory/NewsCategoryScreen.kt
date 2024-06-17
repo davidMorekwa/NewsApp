@@ -21,7 +21,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,8 +53,11 @@ import coil.compose.SubcomposeAsyncImageContent
 import com.example.newsapp.R
 import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.utils.Constants
+import com.example.newsapp.ui.components.BallPulseSyncIndicator
+import com.example.newsapp.ui.components.CircleShapeIndicator
 import com.example.newsapp.ui.components.MyDropDownMenu
 import com.example.newsapp.ui.navigation.NavigationScreens
+import com.example.newsapp.ui.screens.home.HomeScreenViewModel
 import com.example.newsapp.ui.screens.home.headlines.shimmerLoadingAnimation
 import com.example.newsapp.ui.screens.search.SearchScreenViewModel
 import com.example.newsapp.ui.screens.webview.WebViewViewModel
@@ -71,6 +73,7 @@ of the categories in the search screen
 @Composable
 fun NewsCategoryScreen(
     searchScreenViewModel: SearchScreenViewModel,
+    homeScreenViewModel: HomeScreenViewModel,
     webViewViewModel: WebViewViewModel,
     navHostController: NavHostController
 ) {
@@ -118,9 +121,9 @@ fun NewsCategoryScreen(
                     .padding(8.dp)
                     .background(color = MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator(
-                color = if(isSystemInDarkTheme()) Color.White else Color.Black
-            ) }
+            ) {
+                BallPulseSyncIndicator()
+            }
         } else {
             LazyColumn(
                 modifier = Modifier
@@ -141,6 +144,9 @@ fun NewsCategoryScreen(
                             webViewViewModel.readArticle(articleUrl = article.htmlurl)
                             navHostController.navigate(NavigationScreens.ARTICLE_VIEW_SCREEN.name)
                         },
+                        onGeminisClick = {
+
+                        }
                     )
                 }
             }
@@ -161,7 +167,8 @@ fun CategoryScreenArticleItem(
     article: NewsArticle,
     onAddToFavoriteClick:()->Unit,
     onAddTOBookmarkClick:()->Unit,
-    onArticleClick: ()->Unit
+    onArticleClick: ()->Unit,
+    onGeminisClick: ()->Unit
 ) {
     val multimedia = article.multimedia
     var dropDownMenuExpanded by rememberSaveable {
@@ -221,7 +228,8 @@ fun CategoryScreenArticleItem(
                             dropDownMenuExpanded = false
                         },
                         onAddToBookmarkClick = { onAddTOBookmarkClick() },
-                        onAddToFavoriteClick = { onAddToFavoriteClick() }
+                        onAddToFavoriteClick = { onAddToFavoriteClick() },
+                        onGeminisClick = { onGeminisClick() }
                     )
 
                 }
@@ -267,7 +275,8 @@ fun MyPreview() {
         CategoryScreenArticleItem(article = Constants.sampleArticle,
             onAddToFavoriteClick = { /*TODO*/ },
             onAddTOBookmarkClick = { },
-            onArticleClick = {}
+            onArticleClick = {},
+            onGeminisClick = {}
         )
     }
 }

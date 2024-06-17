@@ -1,6 +1,5 @@
 package com.example.newsapp.ui
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
@@ -8,6 +7,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.newsapp.NewsApplication
 import com.example.newsapp.ui.screens.auth.AuthViewModel
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
+import com.example.newsapp.ui.screens.onBoarding.OnBoardingViewModel
 import com.example.newsapp.ui.screens.profile.ProfileScreenViewModel
 import com.example.newsapp.ui.screens.search.SearchScreenViewModel
 import com.example.newsapp.ui.screens.webview.WebViewViewModel
@@ -17,7 +17,8 @@ object ViewModelProvider {
         initializer {
             HomeScreenViewModel(
                 remoteRepository = newsApplication().appContainer.remoteRepository,
-                localRepository = newsApplication().appContainer.localRepository
+                localRepository = newsApplication().appContainer.localRepository,
+                generativeModel = newsApplication().appContainer.generativeModel
             )
         }
         initializer {
@@ -36,7 +37,14 @@ object ViewModelProvider {
         }
         initializer {
             AuthViewModel(
-                authRepository = newsApplication().appContainer.authRepository
+                authRepository = newsApplication().appContainer.authRepository,
+                remoteRepository = newsApplication().appContainer.remoteRepository
+            )
+        }
+        initializer {
+            OnBoardingViewModel(
+                remoteRepository = newsApplication().appContainer.remoteRepository,
+                localRepository = newsApplication().appContainer.localRepository
             )
         }
     }

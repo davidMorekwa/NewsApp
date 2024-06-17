@@ -74,9 +74,11 @@ class SearchScreenViewModel(
             _searchResultUiState.value = SearchScreenUiState(articles = emptyList())
             Log.d(TAG, "Getting ${category} headlines")
             _searchString.value = category
-            val results = remoteRepository.getCategoryTopStories(category)
-            Log.d(TAG, "Results: ${results.size}")
-            _searchResultUiState.value = SearchScreenUiState(articles = results)
+            val headlines_results = remoteRepository.getCategoryTopStories(category)
+            val latest_news_results = remoteRepository.getCategoryLatestNews(category)
+            val result = headlines_results+latest_news_results
+            Log.d(TAG, "Results: ${result.size}")
+            _searchResultUiState.value = SearchScreenUiState(articles = result.shuffled())
 
         }
     }

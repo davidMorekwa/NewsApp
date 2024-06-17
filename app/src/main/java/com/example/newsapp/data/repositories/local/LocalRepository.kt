@@ -2,7 +2,7 @@ package com.example.newsapp.data.repositories.local
 
 import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.repositories.local.entities.ArticleWithMedia
-import com.example.newsapp.data.repositories.local.entities.NewsArticleEntity
+import com.example.newsapp.data.repositories.local.entities.NewsCategoryEntity
 import com.example.newsapp.data.repositories.local.entities.RecentSearchEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,4 +17,8 @@ interface LocalRepository {
     suspend fun getRecentSearch(): Flow<List<RecentSearchEntity>>
     suspend fun clearRecentSearch()
     suspend fun deleteSearchTerm(string: String)
+
+    suspend fun addCategory(categoryEntity: NewsCategoryEntity)
+    suspend fun getCategories():List<NewsCategoryEntity>
+    suspend fun deleteCategory(categoryEntity: NewsCategoryEntity)
 }

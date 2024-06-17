@@ -2,8 +2,9 @@ package com.example.newsapp.data.repository.remote
 
 import android.util.Log
 import com.example.newsapp.data.fakeDataSource.RemoteDataSource
-import com.example.newsapp.data.model.response.search.Doc
 import com.example.newsapp.data.model.NewsArticle
+import com.example.newsapp.data.model.NewsCategoryItem
+import com.example.newsapp.data.model.response.search.Doc
 import com.example.newsapp.data.model.response.topheadlines.ApiResponse
 import com.example.newsapp.data.repositories.remote.RemoteRepository
 import retrofit2.Response
@@ -15,9 +16,7 @@ class FakeRemoteRepo: RemoteRepository {
             ApiResponse(
                 copyright = "Copyright",
                 results = RemoteDataSource.newsArticles,
-                last_updated = "Last update",
                 num_results = RemoteDataSource.newsArticles.size,
-                section = "Section",
                 status = "OK"
             )
         )
@@ -37,8 +36,20 @@ class FakeRemoteRepo: RemoteRepository {
         }
     }
 
+    override suspend fun getCategoryLatestNews(category: String): List<NewsArticle> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun searchArticle(query: String): List<Doc> {
         TODO("Not yet implemented")
 
+    }
+
+    override suspend fun getLatestNews(): List<NewsArticle> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCatgories(): List<NewsCategoryItem> {
+        TODO("Not yet implemented")
     }
 }
