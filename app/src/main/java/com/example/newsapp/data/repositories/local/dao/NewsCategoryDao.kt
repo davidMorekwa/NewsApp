@@ -14,4 +14,6 @@ interface NewsCategoryDao {
     fun getCategories(): List<NewsCategoryEntity>
     @Delete
     fun deleteCategory(categoryEntity: NewsCategoryEntity)
+    @Query("DELETE FROM tbl_news_category")
+    fun clearCategories()
 }

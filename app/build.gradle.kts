@@ -124,6 +124,8 @@ dependencies {
     // gemini
     implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
 //    implementation ("com.github.MahboubehSeyedpour:jetpack-loading:1.1.0")
+    // datastore
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
 
     // test

@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,8 +57,8 @@ import kotlinx.coroutines.flow.map
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    authViewModel: AuthViewModel
-//    profileScreenViewModel: ProfileScreenViewModel,
+    authViewModel: AuthViewModel,
+    profileScreenViewModel: ProfileScreenViewModel,
 //    navHostController: NavHostController
 ) {
     var isDisplayPreferencesClicked: Boolean by rememberSaveable {
@@ -68,6 +69,8 @@ fun ProfileScreen(
     }
     val isDarkTheme = useDarkTheme.collectAsState(initial = false)
     val currentUser = FirebaseAuth.getInstance().currentUser
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     Log.d(TAG, "Current user ${currentUser?.email}")
     Scaffold(
         topBar = {
@@ -269,7 +272,14 @@ fun ProfileScreen(
                             )
                         }
                     }
-                    Icon(imageVector = Icons.Filled.KeyboardArrowRight, contentDescription = "More")
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowRight,
+                        contentDescription = "More",
+                        modifier = Modifier
+                            .clickable {
+                                profileScreenViewModel.clearCategories(context = context)
+                            }
+                    )
                 }
                 Spacer(modifier = Modifier.height(26.dp))
                 // language

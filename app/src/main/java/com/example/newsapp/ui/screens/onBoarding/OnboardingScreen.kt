@@ -1,5 +1,6 @@
 package com.example.newsapp.ui.screens.onBoarding
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -27,6 +29,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,13 +37,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.newsapp.data.model.NewsCategoryItem
-import com.example.newsapp.data.utils.Constants
+import com.example.newsapp.ui.activities.HomeActivity
 import com.example.newsapp.ui.components.BallPulseSyncIndicator
 import com.example.newsapp.ui.theme.NewsAppTheme
 
@@ -52,13 +57,12 @@ The user is supposed to select their preferred categories
 
 @Composable
 fun OnBoardingScreen(
-    onBoardingViewModel: OnBoardingViewModel
+    onBoardingViewModel: OnBoardingViewModel,
+    navHostController: NavHostController,
 ) {
-    var selectedCategories by rememberSaveable {
-        mutableStateOf(listOf<NewsCategoryItem>())
-    }
-//    var categories = onBoardingViewModel.categories.collectAsState()
-    val categories = Constants.listOfCategories
+    val context = LocalContext.current
+    var status = onBoardingViewModel.status.collectAsState()
+    var categories = onBoardingViewModel.categories.collectAsState().value
     if(categories.isEmpty()){
         Box(contentAlignment = Alignment.Center,modifier = Modifier.fillMaxSize()){
             BallPulseSyncIndicator()
@@ -70,23 +74,33 @@ fun OnBoardingScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.background)
+                .padding(bottom = 30.dp)
         ) {
             items(categories) { category: NewsCategoryItem ->
                 MyButton(
                     categoryItem = category,
-                    onCategoryClick = {}
+                    onCategoryClick = {
+                        onBoardingViewModel.addCategory(categoryItem = category)
+                    }
                 )
             }
             item(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
                 ElevatedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        onBoardingViewModel.finish()
+                        onBoardingViewModel.storeInPreferenceDataStore(context = context)
+                        context.startActivity(Intent(context, HomeActivity::class.java))
+                    },
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     colors = ButtonDefaults.elevatedButtonColors(
                         containerColor = MaterialTheme.colorScheme.surface,
                         contentColor = MaterialTheme.colorScheme.onSurface,
+                        disabledContainerColor = Color.Transparent,
+                        disabledContentColor = Color.Gray
                     ),
+                    enabled = status.value,
                     modifier = Modifier
                         .fillMaxWidth(0.6f)
                 ) {

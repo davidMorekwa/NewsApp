@@ -18,7 +18,8 @@ interface LocalRepository {
     suspend fun clearRecentSearch()
     suspend fun deleteSearchTerm(string: String)
 
-    suspend fun addCategory(categoryEntity: NewsCategoryEntity)
+    suspend fun addCategory(categoryEntities: List<NewsCategoryEntity>)
     suspend fun getCategories():List<NewsCategoryEntity>
     suspend fun deleteCategory(categoryEntity: NewsCategoryEntity)
+    suspend fun clearCategories()
 }

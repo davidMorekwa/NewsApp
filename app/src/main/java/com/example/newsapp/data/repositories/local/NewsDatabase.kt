@@ -16,7 +16,7 @@ import com.example.newsapp.data.utils.Constants
 
 @Database(
     entities = [NewsArticleEntity::class, MultimediaEntity::class, RecentSearchEntity::class, NewsCategoryEntity::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class NewsDatabase: RoomDatabase() {

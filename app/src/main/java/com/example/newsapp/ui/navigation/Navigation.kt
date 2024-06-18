@@ -11,6 +11,7 @@ import com.example.newsapp.ui.screens.home.HomeScreen
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
 import com.example.newsapp.ui.screens.home.headlines.HeadlinesScreen
 import com.example.newsapp.ui.screens.profile.ProfileScreen
+import com.example.newsapp.ui.screens.profile.ProfileScreenViewModel
 import com.example.newsapp.ui.screens.search.SearchScreen
 import com.example.newsapp.ui.screens.search.SearchScreenViewModel
 import com.example.newsapp.ui.screens.search.newscategory.NewsCategoryScreen
@@ -25,10 +26,12 @@ fun Navigation(
     val searchScreenViewModel: SearchScreenViewModel = viewModel(factory = ViewModelProvider.factory)
     val webViewScreenViewModel: WebViewViewModel = viewModel(factory = ViewModelProvider.factory)
     val authViewModel: AuthViewModel = viewModel(factory = ViewModelProvider.factory)
+    val profileViewModel: ProfileScreenViewModel = viewModel(factory = ViewModelProvider.factory)
     NavHost(
         navController = navController,
         startDestination = NavigationScreens.HOME_SCREEN.name
     ){
+
         composable(route = NavigationScreens.HOME_SCREEN.name){
             HomeScreen(
                 navHostController = navController,
@@ -50,7 +53,8 @@ fun Navigation(
         }
         composable(route = NavigationScreens.PROFILE_SCREEN.name){
             ProfileScreen(
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                profileScreenViewModel = profileViewModel
             )
         }
         composable(route = NavigationScreens.HEADLINE_ARTICLES_SCREEN.name){
