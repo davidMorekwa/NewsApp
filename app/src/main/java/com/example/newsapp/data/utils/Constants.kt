@@ -59,6 +59,7 @@ object Constants {
 
 
     val STORED_THEME = booleanPreferencesKey("isDarkTheme")
+    val IS_ONBOARDING_COMPLETE = booleanPreferencesKey("is_onboarding_complete")
     val sampleArticle = NewsArticle(
         articleabstract = "In a groundbreaking discovery, scientists have uncovered a new species of dinosaur that roamed the earth millions of years ago.",
         byline = "By John Doe",

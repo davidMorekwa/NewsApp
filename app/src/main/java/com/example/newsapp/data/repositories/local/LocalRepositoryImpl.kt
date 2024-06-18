@@ -64,15 +64,22 @@ class LocalRepositoryImpl(
         return newsDatabase.recentSearchDao().deleteSearchTerm(string)
     }
 
-    override suspend fun addCategory(categoryEntity: NewsCategoryEntity) {
-        return newsDatabase.newsCategoryDao().addCategory(categoryEntity)
+    override suspend fun addCategory(categoryEntities: List<NewsCategoryEntity>) {
+        categoryEntities.forEach { categoryEntity ->
+            newsDatabase.newsCategoryDao().addCategory(categoryEntity)
+        }
     }
 
     override suspend fun getCategories(): List<NewsCategoryEntity> {
-        return newsDatabase.newsCategoryDao().getCategories()
+//        return newsDatabase.newsCategoryDao().getCategories()
+        return emptyList()
     }
 
     override suspend fun deleteCategory(categoryEntity: NewsCategoryEntity) {
         return newsDatabase.newsCategoryDao().deleteCategory(categoryEntity)
+    }
+
+    override suspend fun clearCategories() {
+        return newsDatabase.newsCategoryDao().clearCategories()
     }
 }

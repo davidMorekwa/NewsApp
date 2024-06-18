@@ -32,7 +32,8 @@ object ViewModelProvider {
         }
         initializer {
             ProfileScreenViewModel(
-                context = newsApplication().applicationContext
+                context = newsApplication().applicationContext,
+                localRepository = newsApplication().appContainer.localRepository
             )
         }
         initializer {

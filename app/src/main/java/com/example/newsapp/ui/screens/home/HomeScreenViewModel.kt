@@ -11,6 +11,7 @@ import com.google.ai.client.generativeai.type.Content
 import com.google.ai.client.generativeai.type.asTextOrNull
 import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,10 +48,20 @@ class HomeScreenViewModel(
     }
 
     init{
+        fetchArticles()
+    }
+
+    fun fetchArticles(){
         viewModelScope.launch(Dispatchers.IO) {
             Log.d(TAG, "Getting articles")
-            _topHeadlineUiState.value = remoteRepository.getTopStories()
-            _latestNewsUiState.value = remoteRepository.getLatestNews()
+            val topStoriesDeferred = async { remoteRepository.getTopStories() }
+            val latestNewsDeferred = async { remoteRepository.getLatestNews() }
+
+            val topStories = topStoriesDeferred.await()
+            val latestNews = latestNewsDeferred.await()
+
+            _topHeadlineUiState.value = topStories
+            _latestNewsUiState.value = latestNews
             Log.d(TAG, "Latest Articles: ${_latestNewsUiState.value.size}")
         }
     }
