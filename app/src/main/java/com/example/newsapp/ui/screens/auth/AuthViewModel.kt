@@ -2,15 +2,11 @@ package com.example.newsapp.ui.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsapp.data.model.NewsCategoryItem
 import com.example.newsapp.data.repositories.auth.AuthRepository
 import com.example.newsapp.data.repositories.auth.Resource
 import com.example.newsapp.data.repositories.auth.SignInState
-import com.example.newsapp.data.repositories.remote.RemoteRepository
-import kotlinx.coroutines.Dispatchers
+import com.example.newsapp.data.repositories.remote_data.RemoteRepository
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 

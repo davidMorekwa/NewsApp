@@ -2,15 +2,18 @@ package com.example.newsapp.data.di
 
 import android.content.Context
 import com.example.newsapp.BuildConfig
+import com.example.newsapp.data.apiservices.LatestNewsService
+import com.example.newsapp.data.apiservices.TopHeadlineNewsService
+import com.example.newsapp.data.apiservices.WeatherService
 import com.example.newsapp.data.repositories.auth.AuthRepository
 import com.example.newsapp.data.repositories.auth.AuthRepositoryImpl
-import com.example.newsapp.data.repositories.local.LocalRepository
-import com.example.newsapp.data.repositories.local.LocalRepositoryImpl
-import com.example.newsapp.data.repositories.local.NewsDatabase
-import com.example.newsapp.data.repositories.remote.RemoteRepository
-import com.example.newsapp.data.repositories.remote.RemoteRepositoryImpl
-import com.example.newsapp.data.repositories.remote.services.LatestNewsService
-import com.example.newsapp.data.repositories.remote.services.TopHeadlineNewsService
+import com.example.newsapp.data.repositories.local_data.LocalRepository
+import com.example.newsapp.data.repositories.local_data.LocalRepositoryImpl
+import com.example.newsapp.data.repositories.local_data.NewsDatabase
+import com.example.newsapp.data.repositories.remote_data.RemoteRepository
+import com.example.newsapp.data.repositories.remote_data.RemoteRepositoryImpl
+import com.example.newsapp.data.repositories.weather.WeatherRepository
+import com.example.newsapp.data.repositories.weather.WeatherRepositoryImpl
 import com.example.newsapp.data.utils.Constants
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.generationConfig
@@ -23,11 +26,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 interface AppContainer {
     val topHeadlineNewsService: TopHeadlineNewsService
     val latestNewsService: LatestNewsService
+    val weatherService: WeatherService
     val remoteRepository: RemoteRepository
+    val weatherRepository: WeatherRepository
     val localRepository: LocalRepository
     val authRepository: AuthRepository
     val generativeModel: GenerativeModel
-//    val pager: Pager<Int, NewsArticleEntity>
 }
 
 class AppContainerImpl(context: Context): AppContainer{
@@ -51,6 +55,11 @@ class AppContainerImpl(context: Context): AppContainer{
         .baseUrl(Constants.LATEST_NEWS_BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
+    private val weather_retrofit: Retrofit = Retrofit
+        .Builder()
+        .baseUrl("https://api.openweathermap.org/data/2.5/")
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .build()
     private val firebaseAuth = FirebaseAuth.getInstance()
 
     override val topHeadlineNewsService: TopHeadlineNewsService by lazy {
@@ -58,6 +67,9 @@ class AppContainerImpl(context: Context): AppContainer{
     }
     override val latestNewsService: LatestNewsService by lazy {
         latest_news_retrofit.create(LatestNewsService::class.java)
+    }
+    override val weatherService: WeatherService by lazy {
+        weather_retrofit.create(WeatherService::class.java)
     }
     override val remoteRepository: RemoteRepository by lazy {
         RemoteRepositoryImpl(
@@ -73,6 +85,9 @@ class AppContainerImpl(context: Context): AppContainer{
     }
     override val authRepository: AuthRepository by lazy {
         AuthRepositoryImpl(firebaseAuth = firebaseAuth)
+    }
+    override val weatherRepository: WeatherRepository by lazy{
+        WeatherRepositoryImpl(weatherService = weatherService)
     }
     override val generativeModel: GenerativeModel by lazy {
         GenerativeModel(
@@ -91,10 +106,4 @@ class AppContainerImpl(context: Context): AppContainer{
             // See https://ai.google.dev/gemini-api/docs/safety-settings
         )
     }
-//    @OptIn(ExperimentalPagingApi::class)
-//    override val pager: Pager<Int, NewsArticleEntity>  =
-//        Pager(
-//            config = PagingConfig(pageSize = 10),
-//            pagingSourceFactory = {localRepository.getNewsArticles()}
-//        )
 }

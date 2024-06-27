@@ -60,7 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.newsapp.R
 import com.example.newsapp.data.model.NewsCategoryItem
-import com.example.newsapp.data.repositories.local.entities.RecentSearchEntity
+import com.example.newsapp.data.repositories.local_data.entities.RecentSearchEntity
 import com.example.newsapp.data.utils.Constants
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.theme.NewsAppTheme

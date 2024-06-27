@@ -90,15 +90,16 @@ fun HeadlineNewsArticle(newsArticles: List<NewsArticle>) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
+                .fillMaxHeight(0.2f)
         ) { page ->
             val article = newsArticles[page]
-            val height = article.multimedia?.get(1)?.height?.minus(120)
-            val width = article.multimedia?.get(1)?.width?.minus(200)
+            val height = article.multimedia?.get(1)?.height
+            val width = article.multimedia?.get(1)?.width
             Card(
                 elevation = 20.dp,
                 backgroundColor = MaterialTheme.colorScheme.surface,
                 modifier = Modifier
-                    .height(height!!.dp)
+                    .height(200.dp)
                     .padding(horizontal = 16.dp, vertical = 2.dp)
                     .shadow(
                         elevation = 22.dp,

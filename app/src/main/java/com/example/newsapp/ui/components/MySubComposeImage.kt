@@ -24,7 +24,7 @@ fun MySubComposeImage(
         contentDescription = "Article Multimedia",
         contentScale = ContentScale.FillBounds,
         modifier = Modifier
-            .height(model?.height?.dp ?: 220.dp)
+            .height(220.dp)
     ) {
         val state = painter.state
         if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {

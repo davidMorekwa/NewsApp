@@ -185,7 +185,7 @@ fun HeadlinesScreen(
                                 sheetState.show()
                                 showBottomSheet = true
                             }
-                        }
+                        },
                     )
                 }
             }

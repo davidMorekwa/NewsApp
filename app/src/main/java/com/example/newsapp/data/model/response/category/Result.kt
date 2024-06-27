@@ -6,7 +6,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Result(
-    @Json(name = "section")
+    @Json(name = "display_name")
     var section: String
 ){
     fun toNewsCategoryItem(id: Int):NewsCategoryItem{

@@ -6,7 +6,7 @@ import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.model.NewsCategoryItem
 import com.example.newsapp.data.model.response.search.Doc
 import com.example.newsapp.data.model.response.topheadlines.ApiResponse
-import com.example.newsapp.data.repositories.remote.RemoteRepository
+import com.example.newsapp.data.repositories.remote_data.RemoteRepository
 import retrofit2.Response
 
 class FakeRemoteRepo: RemoteRepository {

@@ -30,7 +30,7 @@ fun NewsArticleItem(
     onArticleClick: () -> Unit,
     onAddToFavoriteClick: () -> Unit,
     onAddToBookmarkClick:() -> Unit,
-    onGeminisClick: () -> Unit
+    onGeminisClick: () -> Unit,
 ) {
     val context = LocalContext.current
     var itemClicked by remember {
@@ -44,6 +44,7 @@ fun NewsArticleItem(
         else -> "${timeDifference.toHours()} hr${if (timeDifference.toHours() > 1) "s" else ""}"
     }
     Log.d("NEws Article Item", "Duration:: ${duration}")
+
     val multimedia = article.multimedia
 
     var dropDownMenuExpanded by remember {
@@ -139,7 +140,7 @@ fun MyPreview() {
             onArticleClick = {},
             onAddToFavoriteClick = {},
             onAddToBookmarkClick = {},
-            onGeminisClick = {}
+            onGeminisClick = {},
         )
     }
 }

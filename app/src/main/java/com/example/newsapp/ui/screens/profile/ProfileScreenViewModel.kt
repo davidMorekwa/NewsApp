@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsapp.data.repositories.local.LocalRepository
+import com.example.newsapp.data.repositories.local_data.LocalRepository
 import com.example.newsapp.data.utils.Constants
 import com.example.newsapp.data.utils.Constants.STORED_THEME
 import com.example.newsapp.ui.activities.dataStore

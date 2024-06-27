@@ -43,13 +43,18 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.R
+import com.example.newsapp.ui.ViewModelProvider
 import com.example.newsapp.ui.activities.HomeActivity
 import com.example.newsapp.ui.components.CircleShapeIndicator
 import com.example.newsapp.ui.navigation.NavigationScreens
+import com.example.newsapp.ui.theme.NewsAppTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -184,7 +189,9 @@ fun LoginScreen(
                     )
                 }
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        authViewModel.loginUser(email, password)
+                    },
                     shape = RoundedCornerShape(15.dp),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Black,
@@ -224,7 +231,7 @@ fun LoginScreen(
                     }
                     Button(
                         onClick = {
-                            authViewModel.loginUser(email, password)
+
                         },
                         shape = RoundedCornerShape(15.dp),
                         elevation = ButtonDefaults.elevation(
@@ -269,5 +276,13 @@ fun LoginScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun LoginScreenPreview() {
+    NewsAppTheme {
+        LoginScreen(navHostController = rememberNavController(), authViewModel = viewModel(factory = ViewModelProvider.factory))
     }
 }

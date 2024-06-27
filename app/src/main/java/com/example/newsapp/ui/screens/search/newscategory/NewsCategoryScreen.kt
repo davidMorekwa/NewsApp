@@ -43,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +55,6 @@ import com.example.newsapp.R
 import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.utils.Constants
 import com.example.newsapp.ui.components.BallPulseSyncIndicator
-import com.example.newsapp.ui.components.CircleShapeIndicator
 import com.example.newsapp.ui.components.MyDropDownMenu
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
@@ -203,7 +203,9 @@ fun CategoryScreenArticleItem(
                     text = article.title,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 13.sp,
-                    lineHeight = 15.sp
+                    lineHeight = 15.sp,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
                 )
                 if (multimedia.isNullOrEmpty()) {
                     Text(

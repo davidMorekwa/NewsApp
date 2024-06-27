@@ -1,6 +1,5 @@
 package com.example.benchmark
 
-import androidx.benchmark.macro.FrameTimingMetric
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
@@ -31,13 +30,13 @@ class ExampleStartupBenchmark {
     @Test
     fun startup() = benchmarkRule.measureRepeated(
         packageName = "com.example.newsapp",
-        metrics = listOf(StartupTimingMetric(), FrameTimingMetric()),
+        metrics = listOf(StartupTimingMetric()),
         iterations = 5,
         startupMode = StartupMode.COLD
     ) {
         pressHome()
-        startActivityAndWait()
+        startActivityAndWait() // TTID
 
-        device.wait(Until.hasObject(By.text("Latest News")), 30_000)
+        device.wait(Until.hasObject(By.text("Latest News")), 30_000) // TTFD
     }
 }
