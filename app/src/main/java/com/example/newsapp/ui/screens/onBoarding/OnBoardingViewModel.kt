@@ -6,9 +6,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.model.NewsCategoryItem
-import com.example.newsapp.data.repositories.local.LocalRepository
-import com.example.newsapp.data.repositories.local.entities.NewsCategoryEntity
-import com.example.newsapp.data.repositories.remote.RemoteRepository
+import com.example.newsapp.data.repositories.local_data.LocalRepository
+import com.example.newsapp.data.repositories.local_data.entities.NewsCategoryEntity
+import com.example.newsapp.data.repositories.remote_data.RemoteRepository
 import com.example.newsapp.data.utils.Constants
 import com.example.newsapp.ui.activities.onBoardingDataStore
 import kotlinx.coroutines.Dispatchers

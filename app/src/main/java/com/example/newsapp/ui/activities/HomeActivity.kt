@@ -64,8 +64,6 @@ class HomeActivity : ComponentActivity() {
                         finish()
                     }
                 } else {
-//            val isDarkTheme = theme.collectAsState(initial = false)
-//            Log.i(TAG, "Theme retrieved ${isDarkTheme.value}")
                     NewsAppTheme {
                         // A surface container using the 'background' color from the theme
                         Surface(

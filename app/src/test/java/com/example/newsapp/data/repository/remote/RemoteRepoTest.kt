@@ -1,7 +1,7 @@
 package com.example.newsapp.data.repository.remote
 
 import com.example.newsapp.data.fakeDataSource.RemoteDataSource
-import com.example.newsapp.data.repositories.remote.RemoteRepository
+import com.example.newsapp.data.repositories.remote_data.RemoteRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Before

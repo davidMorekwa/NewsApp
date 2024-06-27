@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.model.NewsArticle
-import com.example.newsapp.data.repositories.local.LocalRepository
-import com.example.newsapp.data.repositories.local.entities.RecentSearchEntity
-import com.example.newsapp.data.repositories.remote.RemoteRepository
+import com.example.newsapp.data.repositories.local_data.LocalRepository
+import com.example.newsapp.data.repositories.local_data.entities.RecentSearchEntity
+import com.example.newsapp.data.repositories.remote_data.RemoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

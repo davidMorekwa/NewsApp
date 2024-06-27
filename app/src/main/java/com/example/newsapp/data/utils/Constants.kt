@@ -3,12 +3,14 @@ package com.example.newsapp.data.utils
 import androidx.compose.ui.graphics.Color
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.example.newsapp.BuildConfig.API_KEY
+import com.example.newsapp.BuildConfig.WEATHER_API_KEY
 import com.example.newsapp.data.model.Multimedia
 import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.model.NewsCategoryItem
 
 object Constants {
-    const val key = API_KEY
+    const val nyt_key = API_KEY
+    const val weather_key = WEATHER_API_KEY
 
     const val TOP_HEADLINES_BASE_URL = "https://api.nytimes.com/svc/topstories/v2/"
     const val LATEST_NEWS_BASE_URL = "https://api.nytimes.com/svc/news/v3/content/nyt/"

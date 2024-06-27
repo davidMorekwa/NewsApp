@@ -18,7 +18,8 @@ object ViewModelProvider {
             HomeScreenViewModel(
                 remoteRepository = newsApplication().appContainer.remoteRepository,
                 localRepository = newsApplication().appContainer.localRepository,
-                generativeModel = newsApplication().appContainer.generativeModel
+                generativeModel = newsApplication().appContainer.generativeModel,
+                weatherRepository = newsApplication().appContainer.weatherRepository,
             )
         }
         initializer {

@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.screens.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -27,19 +29,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -50,10 +53,12 @@ import com.example.newsapp.ui.components.BallPulseSyncIndicator
 import com.example.newsapp.ui.components.HeadlineNewsArticle
 import com.example.newsapp.ui.components.MyBottomSheet
 import com.example.newsapp.ui.components.NewsArticleItem
+import com.example.newsapp.ui.components.WeatherComponent
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.screens.webview.WebViewViewModel
 import com.example.newsapp.ui.theme.NewsAppTheme
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 const val TAG = "HOME SCREEN"
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
@@ -69,14 +74,18 @@ fun HomeScreen(
     val headlineNewsArticles = homeScreenViewModel.topHeadlinesState.collectAsState()
     val latestNewsArticles = homeScreenViewModel.latestNewsState.collectAsState().value
     val isRefreshing = homeScreenViewModel.isRefereshing.collectAsState()
-    val pullRefreshState = rememberPullRefreshState(isRefreshing.value, { homeScreenViewModel.refresh() })
     var chatHistory = homeScreenViewModel.chatHistoryState.collectAsState()
-    val previousArticlesCount = remember { mutableIntStateOf(latestNewsArticles.size) }
+    var weather = homeScreenViewModel.weatherState.collectAsState()
+    val selectedCategories = homeScreenViewModel.selectedCategories.collectAsState()
+    var selectedCategoryNewsListState = homeScreenViewModel.selectedCategoryNewsListState.collectAsState()
+    var categoryIndex = homeScreenViewModel.categoryIndex.collectAsState()
+    val pullRefreshState = rememberPullRefreshState(isRefreshing.value, { homeScreenViewModel.refresh() })
+
     var sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(sheetState.isVisible) }
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
+    val lazyListState = rememberLazyListState()
+    var articleCount = homeScreenViewModel.articleCount.collectAsState()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -138,10 +147,39 @@ fun HomeScreen(
             if(headlineNewsArticles.value.isEmpty()){
                 BallPulseSyncIndicator()
             }else {
+                LaunchedEffect(key1 = lazyListState) {
+                    snapshotFlow { lazyListState.firstVisibleItemIndex }
+                        .collect { index ->
+                            Log.d(TAG, "Index: $index")
+                            Log.d(TAG, "Article count $articleCount")
+                            if (index == articleCount.value - 3) {
+                                Log.d(TAG, "New Index: $categoryIndex")
+                                homeScreenViewModel.fetchOtherArticles(categoryIndex.value)
+                            }
+                        }
+                }
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    state = lazyListState
                 ) {
+                    val date = LocalDate.now()
                     item {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text(
+                                text = "${date.dayOfWeek}, ${date.dayOfMonth} ${date.month}",
+                                fontFamily = FontFamily.Serif,
+                                fontWeight = FontWeight.Light,
+                            )
+                            if (weather.value is WeatherUiState.Success) {
+                                WeatherComponent(
+                                    weatherResponse = (weather.value as WeatherUiState.Success).weather
+                                )
+                            }
+                        }
                         Button(
                             onClick = {
                                 navHostController.navigate(NavigationScreens.HEADLINE_ARTICLES_SCREEN.name)
@@ -157,7 +195,8 @@ fun HomeScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(1.dp),
                                 modifier = Modifier
-                                    .fillMaxWidth(0.4f)
+                                    .fillMaxWidth(0.5f)
+
                             ) {
 
                                 Text(
@@ -170,7 +209,6 @@ fun HomeScreen(
                                 )
                             }
                         }
-
                         HeadlineNewsArticle(newsArticles = headlineNewsArticles.value.take(7))
                         Text(
                             text = "Latest News",
@@ -198,6 +236,41 @@ fun HomeScreen(
                                 }
                             },
                         )
+
+                    }
+                    if (selectedCategoryNewsListState.value is CategoryNewsUiState.Success){
+                        for((key, value) in (selectedCategoryNewsListState.value as CategoryNewsUiState.Success).articles){
+                            if(value.isNotEmpty()){
+                                item {
+                                    Text(
+                                        text = key,
+                                        fontFamily = FontFamily(Font(R.font.delagothic_one_regular))
+                                    )
+                                }
+                                items(value){ article ->
+                                    NewsArticleItem(
+                                        article = article,
+                                        onArticleClick = {
+                                            webViewViewModel.readArticle(articleUrl = article.htmlurl)
+                                            navHostController.navigate(NavigationScreens.ARTICLE_VIEW_SCREEN.name)
+                                        },
+                                        onAddToFavoriteClick = {
+                                            homeScreenViewModel.addToFavorites(article = article)
+                                        },
+                                        onAddToBookmarkClick = {
+                                            homeScreenViewModel.addToBookmarks(article = article)
+                                        },
+                                        onGeminisClick = {
+                                            scope.launch {
+                                                showBottomSheet = true
+                                                homeScreenViewModel.getArticleSummary(articleURL = article.htmlurl)
+                                            }
+                                        },
+                                    )
+                                }
+
+                            }
+                        }
                     }
                 }
             }
