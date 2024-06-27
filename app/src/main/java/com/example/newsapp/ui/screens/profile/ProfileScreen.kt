@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
+import androidx.navigation.NavHostController
 import com.example.newsapp.R
 import com.example.newsapp.data.utils.Constants.STORED_THEME
 import com.example.newsapp.ui.activities.dataStore
@@ -59,7 +60,7 @@ import kotlinx.coroutines.flow.map
 fun ProfileScreen(
     authViewModel: AuthViewModel,
     profileScreenViewModel: ProfileScreenViewModel,
-//    navHostController: NavHostController
+    navHostController: NavHostController
 ) {
     var isDisplayPreferencesClicked: Boolean by rememberSaveable {
         mutableStateOf(false)
@@ -84,7 +85,7 @@ fun ProfileScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-//                            navHostController.popBackStack()
+                            navHostController.navigateUp()
                         }
                     ) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")

@@ -152,7 +152,7 @@ fun HomeScreen(
                         .collect { index ->
                             Log.d(TAG, "Index: $index")
                             Log.d(TAG, "Article count $articleCount")
-                            if (index == articleCount.value - 3) {
+                            if (index >= articleCount.value - 3) {
                                 Log.d(TAG, "New Index: $categoryIndex")
                                 homeScreenViewModel.fetchOtherArticles(categoryIndex.value)
                             }
