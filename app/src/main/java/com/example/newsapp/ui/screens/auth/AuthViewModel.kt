@@ -14,8 +14,6 @@ class AuthViewModel(
     private val authRepository: AuthRepository,
     private val remoteRepository: RemoteRepository
 ): ViewModel() {
-
-
     val _logInState = Channel<SignInState>()
     var logInState = _logInState.receiveAsFlow()
 

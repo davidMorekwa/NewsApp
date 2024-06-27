@@ -40,10 +40,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.newsapp.data.model.NewsCategoryItem
 import com.example.newsapp.ui.activities.HomeActivity
 import com.example.newsapp.ui.components.BallPulseSyncIndicator
@@ -58,7 +58,6 @@ The user is supposed to select their preferred categories
 @Composable
 fun OnBoardingScreen(
     onBoardingViewModel: OnBoardingViewModel,
-    navHostController: NavHostController,
 ) {
     val context = LocalContext.current
     var status = onBoardingViewModel.status.collectAsState()
@@ -76,6 +75,17 @@ fun OnBoardingScreen(
                 .background(color = MaterialTheme.colorScheme.background)
                 .padding(bottom = 30.dp)
         ) {
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ){
+                Text(
+                    text = "Select at least 5 categories",
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Serif,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
             items(categories) { category: NewsCategoryItem ->
                 MyButton(
                     categoryItem = category,
@@ -176,10 +186,10 @@ fun MyButton(
 
 
 @OptIn(ExperimentalAnimationApi::class)
-@Preview(showBackground = true)
+@Preview()
 @Composable
 fun OnBoardingScreenPreviewDark() {
-    NewsAppTheme(useDarkTheme = true) {
+    NewsAppTheme {
 //        OnBoardingScreen()
     }
 }

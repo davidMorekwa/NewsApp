@@ -27,6 +27,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -56,12 +57,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.newsapp.R
-import com.example.newsapp.ui.components.CircleShapeIndicator
+import com.example.newsapp.ui.components.BallPulseSyncIndicator
 import com.example.newsapp.ui.navigation.NavigationScreens
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -89,6 +92,9 @@ fun RegistrationScreen(
         mutableStateOf(false)
     }
     var isPasswordConfirm by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var showPassword by rememberSaveable {
         mutableStateOf(false)
     }
     val registerState = authViewModel.registerState.collectAsState(initial = null)
@@ -164,7 +170,7 @@ fun RegistrationScreen(
                         capitalization = KeyboardCapitalization.Words,
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next
-                    )
+                    ),
                 )
                 OutlinedTextField(
                     value = email,
@@ -229,6 +235,12 @@ fun RegistrationScreen(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Next
                     ),
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { showPassword = !showPassword }) {
+                            Text(text = "show")
+                        }
+                    },
                     isError = isPasswordError
                 )
                 OutlinedTextField(
@@ -265,7 +277,13 @@ fun RegistrationScreen(
                             isPasswordError = password != password_confirm
                             authViewModel.registerUser(email, password, name)
                         }
-                    )
+                    ),
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { showPassword = !showPassword }) {
+                            Text(text = "show")
+                        }
+                    },
                 )
                 AnimatedVisibility(
                     visible = isPasswordConfirm,
@@ -326,7 +344,14 @@ fun RegistrationScreen(
                     }
                 }
                 if (registerState.value?.isLoading == true) {
-                    CircleShapeIndicator()
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        BallPulseSyncIndicator()
+                    }
                 }
             }
         }

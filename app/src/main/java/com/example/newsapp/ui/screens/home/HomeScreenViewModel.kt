@@ -80,7 +80,6 @@ class HomeScreenViewModel(
 
     init{
         fetchInitialArticles()
-        getWeather()
     }
 
     fun fetchInitialArticles(){
@@ -101,6 +100,7 @@ class HomeScreenViewModel(
             }
             Log.d(TAG, "Latest Articles: ${_latestNewsUiState.value.size}")
             Log.d(TAG, "CategoryNewsMap: ${categoryNewsMap.keys.toList()}")
+            getWeather()
         }
     }
     fun fetchOtherArticles(index: Int) {

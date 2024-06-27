@@ -1,6 +1,5 @@
 package com.example.newsapp.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,8 +42,6 @@ fun NewsArticleItem(
         timeDifference.toHours() == 0L -> "${timeDifference.toMinutes()} min"
         else -> "${timeDifference.toHours()} hr${if (timeDifference.toHours() > 1) "s" else ""}"
     }
-    Log.d("NEws Article Item", "Duration:: ${duration}")
-
     val multimedia = article.multimedia
 
     var dropDownMenuExpanded by remember {

@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -34,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,6 +66,7 @@ import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.screens.home.HomeScreenViewModel
 import com.example.newsapp.ui.screens.webview.WebViewViewModel
 import com.example.newsapp.ui.theme.NewsAppTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 const val TAG = "Headlines Screen"
@@ -85,6 +88,11 @@ fun HeadlinesScreen(
     var showBottomSheet by remember { mutableStateOf(sheetState.isVisible) }
     var chatHistory = homeScreenViewModel.chatHistoryState.collectAsState()
     val scope = rememberCoroutineScope()
+    val rowListState = rememberLazyListState()
+    LaunchedEffect(selectedCategory) {
+        delay(2000L)
+        rowListState.animateScrollToItem(selectedCategory-1)
+    }
     Log.d(TAG, "Articles size: ${articles.value.size}")
     Scaffold(
         topBar = {
@@ -98,7 +106,7 @@ fun HeadlinesScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navHostController.popBackStack()
+                        navHostController.navigateUp()
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -145,9 +153,11 @@ fun HeadlinesScreen(
         } else {
             LazyColumn() {
                 item {
+
                     LazyRow(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        state = rowListState,
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {

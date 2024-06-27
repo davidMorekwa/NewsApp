@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -42,6 +43,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,7 +55,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.R
 import com.example.newsapp.ui.ViewModelProvider
 import com.example.newsapp.ui.activities.HomeActivity
-import com.example.newsapp.ui.components.CircleShapeIndicator
+import com.example.newsapp.ui.components.BallPulseSyncIndicator
 import com.example.newsapp.ui.navigation.NavigationScreens
 import com.example.newsapp.ui.theme.NewsAppTheme
 import kotlinx.coroutines.launch
@@ -60,8 +63,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    navHostController: NavHostController,
-    authViewModel: AuthViewModel
+    navHostController: NavHostController = rememberNavController(),
+    authViewModel: AuthViewModel = viewModel(factory = ViewModelProvider.factory)
 ) {
 
     var email by rememberSaveable {
@@ -72,6 +75,9 @@ fun LoginScreen(
     }
     val logInState = authViewModel.logInState.collectAsState(initial = null)
     var isInvalidCredentials by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var showPassword by rememberSaveable {
         mutableStateOf(false)
     }
     val scope = rememberCoroutineScope()
@@ -95,7 +101,7 @@ fun LoginScreen(
             shape = RoundedCornerShape(12.dp),
             modifier = modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.5f)
+                .fillMaxHeight(0.6f)
                 .padding(8.dp)
         ) {
             Column(
@@ -168,7 +174,13 @@ fun LoginScreen(
                     onValueChange = {
                         password = it
                     },
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation() ,
                     shape = RoundedCornerShape(15.dp),
+                    trailingIcon = {
+                        IconButton(onClick = { showPassword = !showPassword }) {
+                            Text(text = "show")
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -222,7 +234,6 @@ fun LoginScreen(
                             contentColor = Color.Black,
                         ),
                         interactionSource = remember { NoRippleInteractionSource() },
-
                         modifier = Modifier
                             .border(0.dp, Color.Transparent)
                             .buttonEffect()
@@ -252,7 +263,14 @@ fun LoginScreen(
                     }
                 }
                 if (logInState.value?.isLoading == true) {
-                    CircleShapeIndicator()
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        BallPulseSyncIndicator()
+                    }
                 }
             }
         }

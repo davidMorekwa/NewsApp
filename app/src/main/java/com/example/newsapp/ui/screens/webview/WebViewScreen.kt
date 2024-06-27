@@ -61,7 +61,7 @@ fun WebViewScreen(
                             .fillMaxWidth()
                     ) {
                         IconButton(
-                            onClick = { navHostController.popBackStack() },
+                            onClick = { navHostController.navigateUp() },
                         ) {
                             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }

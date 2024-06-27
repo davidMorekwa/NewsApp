@@ -100,7 +100,7 @@ fun SearchScreen(
                         if(isTextFieldFocused){
                             isTextFieldFocused = !isTextFieldFocused
                         } else {
-                            navHostController.popBackStack()
+                            navHostController.navigateUp()
                         }
                     }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")

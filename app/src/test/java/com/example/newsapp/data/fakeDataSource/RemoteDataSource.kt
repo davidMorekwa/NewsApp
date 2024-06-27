@@ -1,6 +1,7 @@
 package com.example.newsapp.data.fakeDataSource
 
 import com.example.newsapp.data.model.NewsArticle
+import com.example.newsapp.data.model.response.weather.Main
 import com.example.newsapp.data.model.response.weather.Weather
 import com.example.newsapp.data.model.response.weather.WeatherResponse
 import com.example.newsapp.data.repositories.local_data.entities.NewsCategoryEntity
@@ -34,7 +35,8 @@ object RemoteDataSource {
                 icon = "01d"
             )
         ),
-        name = "New York"
+        name = "New York",
+        main = Main(temp = 23.0)
     )
     val newsArticles = listOf<NewsArticle>(
         NewsArticle(

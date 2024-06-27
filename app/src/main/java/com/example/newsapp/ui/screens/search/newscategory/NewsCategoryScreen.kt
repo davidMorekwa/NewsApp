@@ -101,7 +101,7 @@ fun NewsCategoryScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navHostController.popBackStack()
+                            navHostController.navigateUp()
                         }
                     ) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")

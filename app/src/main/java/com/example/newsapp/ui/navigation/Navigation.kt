@@ -54,7 +54,8 @@ fun Navigation(
         composable(route = NavigationScreens.PROFILE_SCREEN.name){
             ProfileScreen(
                 authViewModel = authViewModel,
-                profileScreenViewModel = profileViewModel
+                profileScreenViewModel = profileViewModel,
+                navHostController = navController
             )
         }
         composable(route = NavigationScreens.HEADLINE_ARTICLES_SCREEN.name){

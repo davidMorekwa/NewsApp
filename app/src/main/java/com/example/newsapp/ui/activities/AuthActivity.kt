@@ -77,7 +77,6 @@ fun AuthNavigation(
         composable(route = NavigationScreens.ON_BOARDING_SCREEN.name){
             OnBoardingScreen(
                 onBoardingViewModel = onBoardingViewModel,
-                navHostController = navController
             )
         }
 
