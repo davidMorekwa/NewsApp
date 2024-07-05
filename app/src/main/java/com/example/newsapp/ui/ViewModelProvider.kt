@@ -20,6 +20,7 @@ object ViewModelProvider {
                 localRepository = newsApplication().appContainer.localRepository,
                 generativeModel = newsApplication().appContainer.generativeModel,
                 weatherRepository = newsApplication().appContainer.weatherRepository,
+                application = newsApplication()
             )
         }
         initializer {

@@ -40,7 +40,9 @@ fun NewsArticleItem(
     val timeDifference = Duration.between(published,currentTime)
     val duration = when {
         timeDifference.toHours() == 0L -> "${timeDifference.toMinutes()} min"
-        else -> "${timeDifference.toHours()} hr${if (timeDifference.toHours() > 1) "s" else ""}"
+        timeDifference.toHours() < 24 -> "${timeDifference.toHours()} hr${if (timeDifference.toHours() > 1) "s" else ""}"
+        timeDifference.toDays() < 30 -> "${timeDifference.toDays()} day${if (timeDifference.toDays() > 1) "s" else ""}"
+        else -> "${timeDifference.toDays() / 30} month${if (timeDifference.toDays() / 30 > 1) "s" else ""}"
     }
     val multimedia = article.multimedia
 

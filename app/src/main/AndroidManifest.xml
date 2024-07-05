@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".NewsApplication"
@@ -21,7 +23,7 @@
         <profileable
             android:shell="true"
             />
-
+        <service android:name=".data.location.LocationService" android:foregroundServiceType="location"/>
         <activity
             android:name=".ui.activities.AuthActivity"
             android:exported="false"
