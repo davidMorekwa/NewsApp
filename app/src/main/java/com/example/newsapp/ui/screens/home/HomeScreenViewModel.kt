@@ -1,8 +1,14 @@
 package com.example.newsapp.ui.screens.home
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.newsapp.NewsApplication
 import com.example.newsapp.data.model.NewsArticle
 import com.example.newsapp.data.model.response.weather.WeatherResponse
 import com.example.newsapp.data.repositories.local_data.LocalRepository
@@ -28,7 +34,8 @@ class HomeScreenViewModel(
     private val localRepository: LocalRepository,
     private val generativeModel: GenerativeModel,
     private val weatherRepository: WeatherRepository,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val application: NewsApplication
 ): ViewModel() {
     private var _topHeadlineUiState: MutableStateFlow<List<NewsArticle>> = MutableStateFlow(emptyList())
     private var _latestNewsUiState: MutableStateFlow<List<NewsArticle>> = MutableStateFlow(emptyList())
@@ -78,12 +85,31 @@ class HomeScreenViewModel(
 //        }
 //    }
 
+    private val locationReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val latitude = intent.getDoubleExtra("latitude", 0.0)
+            val longitude = intent.getDoubleExtra("longitude", 0.0)
+            Log.d(TAG, "Broadcast receiver called. Latitude: $latitude, Longitude: $longitude")
+            if(latitude != 0.0 && longitude != 0.0) {
+                getWeather(longitude, latitude)
+            }
+        }
+    }
+
     init{
-        fetchInitialArticles()
+        viewModelScope.launch(Dispatchers.IO) {
+            fetchInitialArticles()
+            LocalBroadcastManager.getInstance(application)
+                .registerReceiver(locationReceiver, IntentFilter("LocationUpdate"))
+        }
+    }
+    override fun onCleared() {
+        super.onCleared()
+        LocalBroadcastManager.getInstance(application).unregisterReceiver(locationReceiver)
     }
 
     fun fetchInitialArticles(){
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.d(TAG, "Getting articles")
 
             val topStoriesDeferred = async { remoteRepository.getTopStories() }
@@ -100,7 +126,6 @@ class HomeScreenViewModel(
             }
             Log.d(TAG, "Latest Articles: ${_latestNewsUiState.value.size}")
             Log.d(TAG, "CategoryNewsMap: ${categoryNewsMap.keys.toList()}")
-            getWeather()
         }
     }
     fun fetchOtherArticles(index: Int) {
@@ -113,7 +138,7 @@ class HomeScreenViewModel(
         }
     }
     fun fetchCategoryNews(category: String){
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (!_loadedCategories.value.contains(category)) {
                     val articles = remoteRepository.getCategoryLatestNews(category)
@@ -121,24 +146,21 @@ class HomeScreenViewModel(
                         categoryNewsMap[category] = articles
                         _articleCount.value += articles.size
                         Log.d(TAG, "New Article Count ${_articleCount.value}")
-                        Log.d(TAG, "CategoryNewsMap Keys ${categoryNewsMap.keys}")
                         _selectedCategoryNewsListState.value = CategoryNewsUiState.Success(LinkedHashMap(categoryNewsMap))
                         (_selectedCategoryNewsListState.value as CategoryNewsUiState.Success)
                             .articles.forEach { (key, value) -> Log.d(TAG, "Updated Category News ${key} : ${value.size}") }
                     } else {
-                        _categoryIndex.value += 1
-                        var newCategoryToFetch =
-                            _selectedCategories.value[_categoryIndex.value].name
-                        Log.d(TAG, "Fetching from another Category: ${newCategoryToFetch}")
-                        val newArticlesFetched =
-                            remoteRepository.getCategoryLatestNews(newCategoryToFetch)
-                        _articleCount.value += newArticlesFetched.size
-                        categoryNewsMap[newCategoryToFetch] = newArticlesFetched
-                        Log.d(TAG, "CategoryNewsMap Keys ${categoryNewsMap.keys}")
-                        _selectedCategoryNewsListState.value = CategoryNewsUiState.Success(LinkedHashMap(categoryNewsMap))
-                        (_selectedCategoryNewsListState.value as CategoryNewsUiState.Success)
-                            .articles.forEach { (key, value) -> Log.d(TAG, "Updated Category News ${key} : ${value.size}") }
-                        _loadedCategories.value = _loadedCategories.value + newCategoryToFetch
+                        if (_categoryIndex.value.plus(1) >= _selectedCategories.value.size -1) {
+                            _categoryIndex.value += 1
+                            var newCategoryToFetch = _selectedCategories.value[_categoryIndex.value].name
+                            Log.d(TAG, "Fetching from another Category: ${newCategoryToFetch}")
+                            val newArticlesFetched = remoteRepository.getCategoryLatestNews(newCategoryToFetch)
+                            _articleCount.value += newArticlesFetched.size
+                            categoryNewsMap[newCategoryToFetch] = newArticlesFetched
+                            Log.d(TAG, "CategoryNewsMap Keys ${categoryNewsMap.keys}")
+                            _selectedCategoryNewsListState.value = CategoryNewsUiState.Success(LinkedHashMap(categoryNewsMap))
+                            _loadedCategories.value = _loadedCategories.value + newCategoryToFetch
+                        }
                     }
                     _loadedCategories.value = _loadedCategories.value + category
 
@@ -150,10 +172,10 @@ class HomeScreenViewModel(
         }
     }
 
-    fun getWeather(){
-        viewModelScope.launch(ioDispatcher) {
+    fun getWeather(longitude: Double, latitude: Double){
+        viewModelScope.launch(Dispatchers.Unconfined) {
             try {
-                val weather = async{weatherRepository.getWeather(1.0, 1.0)}
+                val weather = async{weatherRepository.getWeather(latitude, longitude)}
                 _weatherUiState.value = WeatherUiState.Success(weather.await())
             } catch (e: HttpException) {
                 _weatherUiState.update { WeatherUiState.Error(e) }
@@ -163,7 +185,7 @@ class HomeScreenViewModel(
 
 
     fun refresh(){
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.d(TAG, "Refresh For new Articles")
             _isRefreshing.value = true
             val articles = remoteRepository.getLatestNews()
@@ -178,7 +200,7 @@ class HomeScreenViewModel(
     }
 
     fun getCategoryTopStories(category: String){
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             _topHeadlineUiState.value = emptyList()
             val results = remoteRepository.getCategoryTopStories(category)
             _topHeadlineUiState.value = results
@@ -186,19 +208,19 @@ class HomeScreenViewModel(
     }
 
     fun addToFavorites(article: NewsArticle){
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             localRepository.addToFavorites(article)
         }
     }
 
     fun addToBookmarks(article: NewsArticle){
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             localRepository.addToBookmark(article)
         }
     }
 
     fun getArticleSummary(articleURL: String){
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             _chatHistory.value += content("user") {
                 text("Summarize this article: $articleURL")
             }
@@ -218,7 +240,7 @@ class HomeScreenViewModel(
     }
 
     fun sendMessage(message: String){
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             _chatHistory.value += content("user") {
                 text(message)
             }

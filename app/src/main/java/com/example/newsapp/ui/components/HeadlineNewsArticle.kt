@@ -2,7 +2,6 @@ package com.example.newsapp.ui.components
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -50,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.palette.graphics.Palette
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
@@ -65,8 +63,6 @@ import kotlin.math.absoluteValue
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeadlineNewsArticle(newsArticles: List<NewsArticle>) {
-    var vibrantSwatch by remember { mutableStateOf(Color.Gray) }
-    var mutedSwatch by remember { mutableStateOf(Color.Gray) }
     val pagerState = rememberPagerState(
         pageCount = {
             newsArticles.size
@@ -102,11 +98,9 @@ fun HeadlineNewsArticle(newsArticles: List<NewsArticle>) {
                     .height(200.dp)
                     .padding(horizontal = 16.dp, vertical = 2.dp)
                     .shadow(
-                        elevation = 22.dp,
+                        elevation = 12.dp,
                         shape = RoundedCornerShape(12.dp),
-                        clip = true,
-                        ambientColor = vibrantSwatch,
-                        spotColor = mutedSwatch
+                        clip = false,
                     )
 //                    .border(2.dp, Color.Blue)
                     .graphicsLayer {
@@ -141,23 +135,7 @@ fun HeadlineNewsArticle(newsArticles: List<NewsArticle>) {
                         model = ImageRequest.Builder(context = LocalContext.current)
                             .data(article.multimedia?.get(0)?.url)
                             .size(Size.ORIGINAL)
-                            .build(),
-                        onSuccess = { success: AsyncImagePainter.State.Success ->
-                            val drawable = success.result.drawable
-                            if (drawable is BitmapDrawable) {
-                                val bitmap = drawable.bitmap
-                                val mutableBitmap =
-                                    if (bitmap.config == Bitmap.Config.HARDWARE) {
-                                        createMutableBitmap(bitmap)
-                                    } else {
-                                        bitmap
-                                    }
-                                val palette = Palette.from(mutableBitmap).generate()
-                                vibrantSwatch = getVibrantSwatch(palette)
-                                mutedSwatch = getMutedSwatch(palette)
-                            }
-
-                        }
+                            .build()
                     )
 
                     Column(

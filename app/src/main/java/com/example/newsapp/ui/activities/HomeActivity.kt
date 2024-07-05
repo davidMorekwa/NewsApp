@@ -19,11 +19,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.newsapp.data.location.LocationService
 import com.example.newsapp.data.utils.Constants
 import com.example.newsapp.ui.components.BottomAppBar
 import com.example.newsapp.ui.navigation.Navigation
@@ -52,9 +54,16 @@ class HomeActivity : ComponentActivity() {
             startActivity(authIntent)
             finish()
         } else {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION),
+                0)
             setContent {
                 val stateIsOnBoardingComplete by isOnBoardingComplete.collectAsState(initial = true)
                 Log.d(TAG, "IsOnBoardingComplete: $stateIsOnBoardingComplete")
+                Intent(applicationContext, LocationService::class.java).apply {
+                    action = LocationService.ACTION_START
+                    startService(this)
+                }
                 if (!stateIsOnBoardingComplete) {
                     LaunchedEffect(key1 = Unit) {
                         val intent = Intent(this@HomeActivity, AuthActivity::class.java).apply {
@@ -80,6 +89,13 @@ class HomeActivity : ComponentActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Intent(applicationContext, LocationService::class.java).apply {
+            action = LocationService.ACTION_STOP
+            startService(this)
+        }
+    }
 }
 
 
