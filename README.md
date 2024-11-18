@@ -10,7 +10,6 @@ A Kotlin Android application that fetches and displays the latest news from the 
 - 📱 **Responsive UI:** Built with modern Android design principles.
 - 📡 **Seamless Networking:** Retrofit for API communication.
 - 📦 **Robust Architecture:** Dependency injection with Dagger Hilt.
-- 🔄 **Optional Offline Caching:** Cache articles for offline viewing.
 
 ## Prerequisites
 
