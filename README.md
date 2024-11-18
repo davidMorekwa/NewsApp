@@ -20,5 +20,11 @@ A Kotlin Android application that fetches and displays the latest news from the 
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/your-username/nyt-news-app.git
-cd nyt-news-app
+git clone https://github.com/davidMorekwa/NewsApp.git
+cd NewsApp
+
+```
+### Alternative
+Download the APK file i.e. app-release.apk.
+Transfer the APK file to your Android device.
+Open the file and follow the installation instructions (ensure "Install from Unknown Sources" is enabled on your device).
